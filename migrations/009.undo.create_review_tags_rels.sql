@@ -1,0 +1,1 @@
+drop table review_tag_rels;
