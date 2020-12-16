@@ -5,6 +5,7 @@ const installmentsRouter = express.Router();
 
 const loggedInUser = 1; //this field will disappear once you introduce login
 
+const validTypes = [ 'Book series', 'Comic series', 'Movie series', 'Show']
 installmentsRouter
   .route("/")
   .get((req, res, next) => {
@@ -21,10 +22,10 @@ installmentsRouter
     const { title, type } = req.body;
     if (!title)
       return res.status(400).json({ error: "Must provide title for installment" });
-    
-    const installment = { title };
-    installment.userId = loggedInUser;
-    InstallmentsService.insertInstallment(db, userId)
+    if (!type || !validTypes.includes(type))
+        return res.status(400).json({error: 'Invalid Type'})
+    const installment = { title, type, fandomId: req.params.fandomId };
+    InstallmentsService.insertInstallment(db, fandomId, installment)
       .then((installment) => res.status(201).json(installment))
       .catch(next);
   });
@@ -37,15 +38,15 @@ installmentsRouter.route("/:installmentId")
 .delete((req, res, next) => {
     const db = req.app.get("db")
     const {id} = req.installment
-    InstallmentsService.deleteInstallment()
+    InstallmentsService.deleteInstallment(db, id)
     .then(() => res.status(204).end())
     .catch(next)
 })
 .patch((req, res, next) => {
     const db = req.app.get("db")
-    const {title} = req.body
+    const {title, type} = req.body
     const newInfo = {title}
-    if (!title) return res.status(400).json({error: 'Missing required fields'})
+    if (!title && !type) return res.status(400).json({error: 'Missing a required field(s)'})
     InstallmentsService.updateInstallment(db, res.installment.id, newInfo)
     .then(installment => {
         return res.status(200).json(installment)

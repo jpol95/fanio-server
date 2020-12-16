@@ -22,7 +22,7 @@ fandomsRouter
       return res.status(400).json({ error: "Must provide title for fandom" });
     const fandom = { title };
     fandom.userId = loggedInUser;
-    FandomsService.insertFandom(db, userId)
+    FandomsService.insertFandom(db, fandom)
       .then((fandom) => res.status(201).json(fandom))
       .catch(next);
   });
@@ -35,7 +35,7 @@ fandomsRouter.route("/:fandomId")
 .delete((req, res, next) => {
     const db = req.app.get("db")
     const {id} = req.fandom
-    FandomsService.deleteFandom()
+    FandomsService.deleteFandom(db, id)
     .then(() => res.status(204).end())
     .catch(next)
 })
