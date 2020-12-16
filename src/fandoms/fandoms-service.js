@@ -20,6 +20,19 @@ const FandomsService = {
       .then(rows => rows[0])
       .then(fandom => FandomsService.getFandomById(db, fandom.id)) 
     },
+    deleteFandom(db, id){
+        db('fandoms')
+        .where({id})
+        .delete()
+    },
+    updateFandom(db, id, newInfo){
+        db('fandoms')
+        .where({id})
+        .update({...newInfo})
+        .returning('*')
+        .then(fandom => FandomsService.getFandomById(db, fandom.id))
+
+    },
   serializeFandom(fandom) {
     return { id: fandom.id, 
     title: xss(fandom.title), 

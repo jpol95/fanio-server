@@ -6,6 +6,8 @@ const helmet = require("helmet");
 const { NODE_ENV } = require('./config')
 const validateBearerToken = require('./middleware/bearer-token')
 const errorHandler = require('./middleware/error-handler')
+const fandomsRouter = require('./fandoms/fandoms-router')
+const installmentsRouter = require('./installments/installments-router')
 
 const app = express();
 
@@ -18,5 +20,6 @@ app.use(cors());
 app.use(errorHandler)
 // app.use(validateBearerToken);
 
-app.use("/api/fandoms")
+app.use("/api/fandoms", fandomsRouter)
+app.use("/api/fandoms/:fandomId/installments")
 module.exports = app;
