@@ -1,6 +1,11 @@
 const xss = require("xss");
 
 const InstallmentsService = {
+    getInstallmentType(db, id){
+        db('installments')
+        .select('type')
+        .where({id})
+    },
   getInstallmentsByFandom(db, fandomId){
     db('installments')
     .select('*')

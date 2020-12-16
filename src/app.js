@@ -21,5 +21,7 @@ app.use(errorHandler)
 // app.use(validateBearerToken);
 
 app.use("/api/fandoms", fandomsRouter)
-app.use("/api/fandoms/:fandomId/installments")
+app.use("/api/fandoms/:fandomId/installments", installmentsRouter)
+app.use("/installments/:installmentId/sections")
+app.use("/installments/:installmentId/sections/:sectionId/subs")
 module.exports = app;
