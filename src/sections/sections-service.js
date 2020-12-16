@@ -1,10 +1,10 @@
 const xss = require("xss");
 
 const SectionsService = {
-  getSectionsByFandom(db, fandomId, tableName){
+  getSectionsByParent(db, parentInfo, tableName){
     db(tableName)
     .select('*')
-    .where({fandomId})
+    .where({ [`${parentInfo[0]}Id`]: parentInfo[1]})
     .map(section => this.serializeSection(section))
   },
   getSectionById(db, id, tableName){

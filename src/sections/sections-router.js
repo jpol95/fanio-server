@@ -4,6 +4,7 @@ const jsonParser = express.json();
 const sectionsRouter = express.Router();
 const InstallmentsService = require("../installments/installments-service");
 const typeList = require("../../type-list");
+const { json } = require("express");
 
 const loggedInUser = 1; //this field will disappear once you introduce login
 
@@ -13,10 +14,10 @@ const setType = (req, res, next) => {
   InstallmentsService.getInstallmentType(db, installmentId).then((type) => {
     res.type = typeList[type];
     if (req.params.sectionId) {
-      res.tableName = typeList[type].subName;
-      res.parent = "section";
+      res.tableName = typeList[type].subName + "s";
+      res.parent = typeList[type].sectionName;
     } else {
-      res.tableName = typeList[type].sectionName;
+      res.tableName = typeList[type].sectionName +"s";
       res.parent = "installment";
     }
   });
@@ -28,7 +29,7 @@ sectionsRouter
   .get((req, res, next) => {
     const db = req.app.get("db");
     const parentId = req.params[`${res.parent}Id`];
-    SectionsService.getSectionsByInstallment(db, parentId, res.tableName)
+    SectionsService.getSectionsByParent(db, [res.parent, parentId], res.tableName)
       .then((sections) => {
         return res.status(200).json(sections);
       })
@@ -42,22 +43,25 @@ sectionsRouter
       return res.status(400).json({ error: "Must provide title for section" });
     if (!type || !validTypes.includes(type))
       return res.status(400).json({ error: "Invalid Type" });
+    if (!order || !Number.isInteger(order) || order < 0 )
+        return res.status(400)/json({ error: 'Order is required and must be an integer above 0'})
     const section = { title, type, [`${res.parent}Id`]: parentId };
-    SectionsService.insertSection(db, parentId, section)
+    SectionsService.insertSection(db, section, res.tableName)
       .then((section) => res.status(201).json(section))
       .catch(next);
   });
 
 sectionsRouter
-  .route("/:sectionId")
+  .route("/:elementId")
   .all(checkSectionExists)
+  .all(setType)
   .get((req, res, next) => {
     return res.status(200).json(res.section);
   })
   .delete((req, res, next) => {
     const db = req.app.get("db");
     const { id } = req.section;
-    SectionsService.deleteSection(db, id)
+    SectionsService.deleteSection(db, id, res.tableName)
       .then(() => res.status(204).end())
       .catch(next);
   })
@@ -67,7 +71,7 @@ sectionsRouter
     const newInfo = { title };
     if (!title && !type)
       return res.status(400).json({ error: "Missing a required field(s)" });
-    SectionsService.updateSection(db, res.section.id, newInfo)
+    SectionsService.updateSection(db, res.section.id, newInfo, res.tableName)
       .then((section) => {
         return res.status(200).json(section);
       })
@@ -78,9 +82,9 @@ sectionsRouter
 
 async function checkSectionExists(req, res, next) {
   try {
-    const sectionId = req.params.sectionId;
-    const section = await SectionsService.getSectionById(sectionId);
-
+    const db = req.app.get("db")
+    const id = req.params.elementId
+    const section = await SectionsService.getSectionById(db, id, res.tableName);
     if (!section) return res.status(400).json({ error: "Section not found" });
     res.section = section;
     next();
