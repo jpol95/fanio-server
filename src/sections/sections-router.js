@@ -2,54 +2,51 @@ const express = require("express");
 const SectionsService = require("./sections-service");
 const jsonParser = express.json();
 const sectionsRouter = express.Router();
-const InstallmentsService = require("../installments/installments-service");
-const typeList = require("../../type-list");
 const { json } = require("express");
 
 const loggedInUser = 1; //this field will disappear once you introduce login
 
 const setType = (req, res, next) => {
   const db = req.app.get("db");
-  const installmentId = req.params.installmentId;
-//   console.log(installmentId)
-  InstallmentsService.getInstallmentType(db, installmentId).then((type) => {
-    res.type = typeList[type];
-    // console.log("heljrenfrekjnf")
-    if (req.params.sectionId) {
-      res.tableName = typeList[type].subName + "s";
-      res.parent = typeList[type].sectionName;
-      res.parentGen = "section"
-    } else {
-      res.tableName = typeList[type].sectionName +"s";
-      res.parent = "installment";
-      res.parentGen = "installment";
-    }
-    next()
-  });
+  if (req.params.sectionId) {
+    res.tableName = "subs";
+    res.parent = "section";
+  } else {
+    res.tableName = "sections";
+    res.parent = "installment";
+  }
+  next();
 };
 
 sectionsRouter
-  .route(["/section/:installmentId", "/sub/:installmentId/:sectionId"])
+  .route(["/section/:installmentId", "/sub/:sectionId"])
   .all(setType)
   .get((req, res, next) => {
     const db = req.app.get("db");
-    const parentId = req.params[`${res.parentGen}Id`];
-    console.log(res.parentGen)
-    SectionsService.getSectionsByParent(db, [res.parent, parentId], res.tableName)
+    console.log(`${res.parent}Id`)
+    const parentId = req.params[`${res.parent}Id`];
+    SectionsService.getSectionsByParent(
+      db,
+      [res.parent, parentId],
+      res.tableName
+    )
       .then((sections) => {
+        // console.log(sections)
         return res.status(200).json(sections);
       })
       .catch(next);
   })
   .post(jsonParser, (req, res, next) => {
-
     const db = req.app.get("db");
     const { title, order } = req.body;
-    const parentId = req.params[`${res.parentGen}Id`];
+    const parentId = req.params[`${res.parent}Id`];
     if (!title)
       return res.status(400).json({ error: "Must provide title for section" });
-    if (!order || !Number.isInteger(order) || order < 0 )
-        return res.status(400)/json({ error: 'Order is required and must be an integer above 0'})
+    if (!order || !Number.isInteger(order) || order < 0)
+      return (
+        res.status(400) /
+        json({ error: "Order is required and must be an integer above 0" })
+      );
     const section = { title, order, [`${res.parent}Id`]: parentId };
     SectionsService.insertSections(db, section, res.tableName)
       .then((section) => res.status(201).json(section))
@@ -57,7 +54,10 @@ sectionsRouter
   });
 
 sectionsRouter
-.route(["/section/:installmentId/:elementId", "/sub/:installmentId/:sectionId/:elementId"])
+  .route([
+    "/section/:elementId",
+    "/sub/:elementId",
+  ])
   .all(setType)
   .all(checkSectionExists)
   .get((req, res, next) => {
@@ -87,8 +87,8 @@ sectionsRouter
 
 async function checkSectionExists(req, res, next) {
   try {
-    const db = req.app.get("db")
-    const id = req.params.elementId
+    const db = req.app.get("db");
+    const id = req.params.elementId;
     const section = await SectionsService.getSectionById(db, id, res.tableName);
     if (!section) return res.status(400).json({ error: "Section not found" });
     res.section = section;
@@ -98,4 +98,4 @@ async function checkSectionExists(req, res, next) {
   }
 }
 
-module.exports = sectionsRouter
+module.exports = sectionsRouter;

@@ -11,6 +11,7 @@ const validRating = (rating) => {
 }
 
 const validTypes = [ 'Book series', 'Comic series', 'Movie series', 'Show']
+
 reviewsRouter
   .route("/")
   .post(jsonParser, (req, res, next) => {
@@ -24,6 +25,8 @@ reviewsRouter
       .then((review) => res.status(201).location(path.posix.join(req.originalUrl, `/${review.id}`)).json(review))
       .catch(next);
   });
+
+  //deal with error here
 
 reviewsRouter.route("/:reviewId")
 .all(checkInstallmentExists)
@@ -56,6 +59,7 @@ async function checkInstallmentExists(req, res, next) {
   try {
     const reviewId = req.params.reviewId;
     const db = req.app.get("db")
+    console.log(reviewId)
     const review = await ReviewsService.getReviewById(db, reviewId);
     if (!review) return res.status(400).json({ error: "Installment not found" });
     res.review = review;
