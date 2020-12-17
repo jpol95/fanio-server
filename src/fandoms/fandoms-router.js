@@ -2,6 +2,7 @@ const express = require("express");
 const FandomsService = require("./fandoms-service");
 const jsonParser = express.json();
 const fandomsRouter = express.Router();
+const path = require('path')
 
 const loggedInUser = 1; //this field will disappear once you introduce login
 
@@ -22,8 +23,9 @@ fandomsRouter
       return res.status(400).json({ error: "Must provide title for fandom" });
     const fandom = { title };
     fandom.userId = loggedInUser;
+    console.log(fandom)
     FandomsService.insertFandom(db, fandom)
-      .then((fandom) => res.status(201).json(fandom))
+      .then((fandom) => res.status(201).location(path.posix.join(req.originalUrl, `/${fandom.id}`)).json(fandom))
       .catch(next);
   });
 
@@ -34,12 +36,12 @@ fandomsRouter.route("/:fandomId")
 })
 .delete((req, res, next) => {
     const db = req.app.get("db")
-    const {id} = req.fandom
+    const {id} = res.fandom
     FandomsService.deleteFandom(db, id)
     .then(() => res.status(204).end())
     .catch(next)
 })
-.patch((req, res, next) => {
+.patch(jsonParser, (req, res, next) => {
     const db = req.app.get("db")
     const {title} = req.body
     const newInfo = {title}
@@ -54,8 +56,9 @@ fandomsRouter.route("/:fandomId")
 
 async function checkFandomExists(req, res, next) {
   try {
+    const db = req.app.get("db")
     const fandomId = req.params.fandomId;
-    const fandom = await FandomsService.getFandomById(fandomId);
+    const fandom = await FandomsService.getFandomById(db, fandomId);
 
     if (!fandom) return res.status(400).json({ error: "Fandom not found" });
     res.fandom = fandom;
@@ -64,3 +67,5 @@ async function checkFandomExists(req, res, next) {
     next(error);
   }
 }
+
+module.exports = fandomsRouter

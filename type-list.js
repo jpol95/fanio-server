@@ -1,20 +1,20 @@
 const typeList = {
-  show : {
+  Show : {
       sectionName: "season",
       subName: "episode",
     },
-  "book series": {
+  "Book series": {
       sectionName: "book",
       subName: null,
     },
-    "movie series": {
+    "Movie series": {
       sectionName: "movie",
       subName: null,
     },
-    "comic series":  {
+    "Comic series":  {
       sectionName: "arc",
       subName: "issue",
     },
 };
 
-  export default typeList
+module.exports = typeList

@@ -1,43 +1,39 @@
 const xss = require("xss");
 
 const FandomsService = {
-  getFandomsByUser(db, userId){
-    db('fandoms')
-    .select('*')
-    .where({userId})
-    .map(fandom => this.serializeFandom(fandom))
+  getFandomsByUser(db, userId) {
+    return db("fandoms")
+      .select("*")
+      .where({ userId })
+      .then((fandoms) => fandoms.map((fandom) => this.serializeFandom(fandom)));
   },
-  getFandomById(db, id){
-    db('fandoms')
-    .select('*')
-    .where({id})
+  getFandomById(db, id) {
+    return db("fandoms").select("*").where({ id }).first();
   },
-  insertFandom(db, fandom){
-      db
+  insertFandom(db, fandom) {
+    return db
       .insert(fandom)
-      .into('fandoms')
-      .returning('*')
-      .then(rows => rows[0])
-      .then(fandom => FandomsService.getFandomById(db, fandom.id)) 
-    },
-    deleteFandom(db, id){
-        db('fandoms')
-        .where({id})
-        .delete()
-    },
-    updateFandom(db, id, newInfo){
-        db('fandoms')
-        .where({id})
-        .update({...newInfo})
-        .returning('*')
-        .then(fandom => FandomsService.getFandomById(db, fandom.id))
-
-    },
+      .into("fandoms")
+      .returning("*")
+      .then((rows) => rows[0])
+      .then((fandom) => FandomsService.getFandomById(db, fandom.id));
+  },
+  deleteFandom(db, id) {
+    return db("fandoms").where({ id }).delete();
+  },
+  updateFandom(db, id, newInfo) {
+    return db("fandoms")
+      .where({ id })
+      .update({ ...newInfo })
+      .returning("*")
+      .then((rows) => rows[0])
+      .then((fandom) => {
+        return FandomsService.getFandomById(db, fandom.id);
+      });
+  },
   serializeFandom(fandom) {
-    return { id: fandom.id, 
-    title: xss(fandom.title), 
-    userId: fandom.userId }
+    return { ...fandom, title: xss(fandom.title) };
   },
 };
 
-module.exports = FandomsService
+module.exports = FandomsService;

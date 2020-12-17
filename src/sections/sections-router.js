@@ -11,24 +11,30 @@ const loggedInUser = 1; //this field will disappear once you introduce login
 const setType = (req, res, next) => {
   const db = req.app.get("db");
   const installmentId = req.params.installmentId;
+//   console.log(installmentId)
   InstallmentsService.getInstallmentType(db, installmentId).then((type) => {
     res.type = typeList[type];
+    // console.log("heljrenfrekjnf")
     if (req.params.sectionId) {
       res.tableName = typeList[type].subName + "s";
       res.parent = typeList[type].sectionName;
+      res.parentGen = "section"
     } else {
       res.tableName = typeList[type].sectionName +"s";
       res.parent = "installment";
+      res.parentGen = "installment";
     }
+    next()
   });
 };
 
 sectionsRouter
-  .route("/")
+  .route(["/section/:installmentId", "/sub/:installmentId/:sectionId"])
   .all(setType)
   .get((req, res, next) => {
     const db = req.app.get("db");
-    const parentId = req.params[`${res.parent}Id`];
+    const parentId = req.params[`${res.parentGen}Id`];
+    console.log(res.parentGen)
     SectionsService.getSectionsByParent(db, [res.parent, parentId], res.tableName)
       .then((sections) => {
         return res.status(200).json(sections);
@@ -36,40 +42,39 @@ sectionsRouter
       .catch(next);
   })
   .post(jsonParser, (req, res, next) => {
+
     const db = req.app.get("db");
-    const { title, type } = req.body;
-    const parentId = req.params[`${res.parent}Id`];
+    const { title, order } = req.body;
+    const parentId = req.params[`${res.parentGen}Id`];
     if (!title)
       return res.status(400).json({ error: "Must provide title for section" });
-    if (!type || !validTypes.includes(type))
-      return res.status(400).json({ error: "Invalid Type" });
     if (!order || !Number.isInteger(order) || order < 0 )
         return res.status(400)/json({ error: 'Order is required and must be an integer above 0'})
-    const section = { title, type, [`${res.parent}Id`]: parentId };
-    SectionsService.insertSection(db, section, res.tableName)
+    const section = { title, order, [`${res.parent}Id`]: parentId };
+    SectionsService.insertSections(db, section, res.tableName)
       .then((section) => res.status(201).json(section))
       .catch(next);
   });
 
 sectionsRouter
-  .route("/:elementId")
-  .all(checkSectionExists)
+.route(["/section/:installmentId/:elementId", "/sub/:installmentId/:sectionId/:elementId"])
   .all(setType)
+  .all(checkSectionExists)
   .get((req, res, next) => {
     return res.status(200).json(res.section);
   })
   .delete((req, res, next) => {
     const db = req.app.get("db");
-    const { id } = req.section;
+    const { id } = res.section;
     SectionsService.deleteSection(db, id, res.tableName)
       .then(() => res.status(204).end())
       .catch(next);
   })
-  .patch((req, res, next) => {
+  .patch(jsonParser, (req, res, next) => {
     const db = req.app.get("db");
-    const { title, type } = req.body;
-    const newInfo = { title };
-    if (!title && !type)
+    const { title, order } = req.body;
+    const newInfo = { title, order };
+    if (!title && !order)
       return res.status(400).json({ error: "Missing a required field(s)" });
     SectionsService.updateSection(db, res.section.id, newInfo, res.tableName)
       .then((section) => {
@@ -92,3 +97,5 @@ async function checkSectionExists(req, res, next) {
     next(error);
   }
 }
+
+module.exports = sectionsRouter

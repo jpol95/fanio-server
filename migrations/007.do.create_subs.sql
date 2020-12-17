@@ -11,5 +11,5 @@ create table issues(
     title text not null,
     "order" integer not null, 
     "reviewId" integer references reviews(id) on delete set null, 
-    "seasonId" integer references arcs(id) on delete cascade 
+    "arcId" integer references arcs(id) on delete cascade 
 );

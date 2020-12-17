@@ -1,47 +1,38 @@
 const xss = require("xss");
 
 const InstallmentsService = {
-    getInstallmentType(db, id){
-        db('installments')
-        .select('type')
-        .where({id})
-    },
-  getInstallmentsByFandom(db, fandomId){
-    db('installments')
-    .select('*')
-    .where({fandomId})
-    .map(installment => this.serializeInstallment(installment))
+  getInstallmentType(db, id) {
+    return db("installments").select("type").where({ id }).first().then(type => type.type)
   },
-  getInstallmentById(db, id){
-    db('installments')
-    .select('*')
-    .where({id})
+  getInstallmentsByFandom(db, fandomId) {
+    return db("installments")
+      .select("*")
+      .where({ fandomId })
+      .then((installments) => installments.map((installment) => this.serializeInstallment(installment)));
   },
-  insertInstallment(db, installment){
-      db
-      .insert(installment)
-      .into('installments')
-      .returning('*')
-    },
-    deleteInstallment(db, id){
-        db('installments')
-        .where({id})
-        .delete()
-    },
-    updateInstallment(db, id, newInfo){
-        db('installments')
-        .where({id})
-        .update({...newInfo})
-        .returning('*')
-        .then(installment => InstallmentsService.getInstallmentById(db, installment.id))
-
-    },
+  getInstallmentById(db, id) {
+   return db("installments").select("*").where({ id }).first();
+  },
+  insertInstallments(db, installment) {
+    return db.insert(installment).into("installments").returning("*");
+  },
+  deleteInstallment(db, id) {
+    return db("installments").where({ id }).delete();
+  },
+  updateInstallment(db, id, newInfo) {
+    return db("installments")
+      .where({ id })
+      .update({ ...newInfo })
+      .returning("*")
+      .then((rows) => rows[0])
+      .then((installment) =>
+        InstallmentsService.getInstallmentById(db, installment.id)
+      );
+  },
   serializeInstallment(installment) {
-    return { id: installment.id, 
-    title: xss(installment.title), 
-    userId: installment.userId }
+    return { ...installment, title: xss(installment.title) };
   },
 };
 //i bet you could standardize this for example
 
-module.exports = InstallmentsService
+module.exports = InstallmentsService;

@@ -8,6 +8,8 @@ const validateBearerToken = require('./middleware/bearer-token')
 const errorHandler = require('./middleware/error-handler')
 const fandomsRouter = require('./fandoms/fandoms-router')
 const installmentsRouter = require('./installments/installments-router')
+const sectionsRouter = require('./sections/sections-router')
+const reviewsRouter = require('./reviews/reviews-router')
 
 const app = express();
 
@@ -21,7 +23,7 @@ app.use(errorHandler)
 // app.use(validateBearerToken);
 
 app.use("/api/fandoms", fandomsRouter)
-app.use("/api/fandoms/:fandomId/installments", installmentsRouter)
-app.use("/installments/:installmentId/sections")
-app.use("/installments/:installmentId/sections/:sectionId/subs")
+app.use("/api/installments", installmentsRouter)
+app.use("/api/sections", sectionsRouter)
+app.use("/api/reviews", reviewsRouter)
 module.exports = app;
