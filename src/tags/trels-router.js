@@ -12,7 +12,7 @@ trelsRouter
   .route("/")
   .get((req, res, next) => {
     const db = req.app.get("db");
-    TrelsService.getTags(db)
+    TrelsService.getTrels(db)
       .then((trel) => {
         return res.status(200).json(trel);
       })
@@ -29,7 +29,7 @@ trelsRouter
     const singleTag = { tagId, reviewId };
     trelArr.push(singleTag)
     }
-    FandomsService.insertTags(db, trelArr)
+    TrelsService.insertTrels(db, trelArr)
       .then((trel) => res.status(201).json(trel))
       .catch(next);
   });
@@ -48,5 +48,4 @@ trelsRouter
 
 //check if you should be returning the thing you're updating
 
-
-module.exports = fandomsRouter
+module.exports = trelsRouter 

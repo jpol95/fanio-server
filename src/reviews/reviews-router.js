@@ -6,11 +6,12 @@ const path = require('path')
 const loggedInUser = 1; //this field will disappear once you introduce login
 
 const validRating = (rating) => {
-    if (rating > 5 || rating < 0 || !Number.isInteger(rating)) return false
+    if (rating > 5 || rating < 0 || !Number.isInteger(Number(rating))) return false
     return true;
 }
 
 const validTypes = [ 'Book series', 'Comic series', 'Movie series', 'Show']
+
 
 reviewsRouter
   .route("/")

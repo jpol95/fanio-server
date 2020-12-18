@@ -76,9 +76,9 @@ sectionsRouter
   })
   .patch(jsonParser, (req, res, next) => {
     const db = req.app.get("db");
-    const { title, order } = req.body;
-    const newInfo = { title, order };
-    if (!title && !order)
+    const { title, order, reviewId } = req.body;
+    const newInfo = { title, order, reviewId };
+    if (!title && !order && !reviewId)
       return res.status(400).json({ error: "Missing a required field(s)" });
     SectionsService.updateSection(db, res.section.id, newInfo, res.tableName)
       .then((section) => {

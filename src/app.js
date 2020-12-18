@@ -11,6 +11,7 @@ const installmentsRouter = require('./installments/installments-router')
 const sectionsRouter = require('./sections/sections-router')
 const reviewsRouter = require('./reviews/reviews-router')
 const tagsRouter = require('./tags/tags-router')
+const trelsRouter = require('./tags/trels-router')
 
 const app = express();
 
@@ -28,4 +29,5 @@ app.use("/api/installments", installmentsRouter)
 app.use("/api/sections", sectionsRouter)
 app.use("/api/reviews", reviewsRouter)
 app.use("/api/tags", tagsRouter)
+app.use("/api/trels", trelsRouter)
 module.exports = app;
