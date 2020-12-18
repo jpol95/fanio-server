@@ -38,18 +38,22 @@ sectionsRouter
   })
   .post(jsonParser, (req, res, next) => {
     const db = req.app.get("db");
-    const { title, order } = req.body;
     const parentId = req.params[`${res.parent}Id`];
+    const sections = []
+    for(section of req.body){
+    const { title, order } = section;
     if (!title)
       return res.status(400).json({ error: "Must provide title for section" });
-    if (!order || !Number.isInteger(order) || order < 0)
+    if (!order || !Number.isInteger(Number(order)) || order < 0)
       return (
-        res.status(400) /
+        res.status(400).
         json({ error: "Order is required and must be an integer above 0" })
       );
-    const section = { title, order, [`${res.parent}Id`]: parentId };
-    SectionsService.insertSections(db, section, res.tableName)
-      .then((section) => res.status(201).json(section))
+    const sectionEl = { title, order, [`${res.parent}Id`]: parentId };
+    sections.push(sectionEl)
+    }
+    SectionsService.insertSections(db, sections, res.tableName)
+      .then((sections) => res.status(201).json(sections))
       .catch(next);
   });
 

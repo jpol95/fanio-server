@@ -18,19 +18,27 @@ installmentsRouter
       .catch(next);
   })
   .post(jsonParser, (req, res, next) => {
-    console.log(req.params)
     const db = req.app.get("db");
-    const { title, type } = req.body;
+    const installmentsList = []
+    for (let installment of req.body){
+    const { title, type } = installment;
     if (!title)
       return res.status(400).json({ error: "Must provide title for installment" });
     if (!type || !validTypes.includes(type))
         return res.status(400).json({error: 'Invalid Type'})
-    const installment = { title, type, fandomId: req.params.fandomId };
+    
+    const installmentSingle = { title, type, fandomId: req.params.fandomId };
+    installmentsList.push(installmentSingle)
+    }
 
-    InstallmentsService.insertInstallments(db, installment)
-      .then((installment) => res.status(201).location(path.posix.join(req.originalUrl, `/${installment.id}`)).json(installment))
+    //debug posting sections, then on to posting reviews! think about that search functionality, if you dare, and how you plan to implement it
+
+    console.log(installmentsList)
+    InstallmentsService.insertInstallments(db, installmentsList)
+      .then((installments) => res.status(201).json(installments))
       .catch(next);
   });
+  //it was ok to delete the location thing in here right? since it was a list
 
 installmentsRouter.route("/:fandomId/:installmentId")
 .all(checkInstallmentExists)
