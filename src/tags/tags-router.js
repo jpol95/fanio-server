@@ -1,16 +1,15 @@
 const express = require("express");
-const TagService = require("./tags-service");
+const TagsService = require("./tags-service");
 const jsonParser = express.json();
 const tagsRouter = express.Router();
 const path = require('path')
-
-const loggedInUser = 1; //this field will disappear once you introduce login
 
 //when you load the reviews you have to load the tags toooooo
 
 tagsRouter
   .route("/")
   .get((req, res, next) => {
+    // console.log("hello")
     const db = req.app.get("db");
     TagsService.getTags(db)
       .then((tags) => {
@@ -39,7 +38,7 @@ tagsRouter
   .get((req, res, next) => {
       const db = req.app.get("db")
       const {tagId} = req.params.tagId
-      TagService.getTagById(tagId)
+      TagsService.getTagById(tagId)
       .then(tag => {
           if (!tag) return res.status(400).json({error: 'Tag not found'})
           return res.status(200).json(tag)
@@ -49,4 +48,4 @@ tagsRouter
 //check if you should be returning the thing you're updating
 
 
-module.exports = fandomsRouter
+module.exports = tagsRouter

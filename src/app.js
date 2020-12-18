@@ -10,6 +10,7 @@ const fandomsRouter = require('./fandoms/fandoms-router')
 const installmentsRouter = require('./installments/installments-router')
 const sectionsRouter = require('./sections/sections-router')
 const reviewsRouter = require('./reviews/reviews-router')
+const tagsRouter = require('./tags/tags-router')
 
 const app = express();
 
@@ -26,4 +27,5 @@ app.use("/api/fandoms", fandomsRouter)
 app.use("/api/installments", installmentsRouter)
 app.use("/api/sections", sectionsRouter)
 app.use("/api/reviews", reviewsRouter)
+app.use("/api/tags", tagsRouter)
 module.exports = app;

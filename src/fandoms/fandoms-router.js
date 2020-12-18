@@ -19,12 +19,12 @@ fandomsRouter
   .post(jsonParser, (req, res, next) => {
     const db = req.app.get("db");
     const { title } = req.body;
-    console.log(req.body)
+    // console.log(req.body)
     if (!title)
       return res.status(400).json({ error: "Must provide title for fandom" });
     const fandom = { title };
     fandom.userId = loggedInUser;
-    console.log(fandom)
+    // console.log(fandom)
     FandomsService.insertFandom(db, fandom)
       .then((fandom) => res.status(201).location(path.posix.join(req.originalUrl, `/${fandom.id}`)).json(fandom))
       .catch(next);

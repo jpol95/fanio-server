@@ -33,7 +33,7 @@ installmentsRouter
 
     //debug posting sections, then on to posting reviews! think about that search functionality, if you dare, and how you plan to implement it
 
-    console.log(installmentsList)
+    // console.log(installmentsList)
     InstallmentsService.insertInstallments(db, installmentsList)
       .then((installments) => res.status(201).json(installments))
       .catch(next);

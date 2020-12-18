@@ -23,7 +23,7 @@ sectionsRouter
   .all(setType)
   .get((req, res, next) => {
     const db = req.app.get("db");
-    console.log(`${res.parent}Id`)
+    // console.log(`${res.parent}Id`)
     const parentId = req.params[`${res.parent}Id`];
     SectionsService.getSectionsByParent(
       db,

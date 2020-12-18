@@ -59,7 +59,7 @@ async function checkInstallmentExists(req, res, next) {
   try {
     const reviewId = req.params.reviewId;
     const db = req.app.get("db")
-    console.log(reviewId)
+    // console.log(reviewId)
     const review = await ReviewsService.getReviewById(db, reviewId);
     if (!review) return res.status(400).json({ error: "Installment not found" });
     res.review = review;
