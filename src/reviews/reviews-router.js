@@ -4,6 +4,7 @@ const jsonParser = express.json();
 const reviewsRouter = express.Router();
 const path = require('path')
 const loggedInUser = 1; //this field will disappear once you introduce login
+const {requireAuth} = require("../middleware/jwt-auth")
 
 const validRating = (rating) => {
     if (rating > 5 || rating < 0 || !Number.isInteger(Number(rating))) return false
@@ -14,8 +15,8 @@ const validTypes = [ 'Book series', 'Comic series', 'Movie series', 'Show']
 
 
 reviewsRouter
-  .route("/")
-  .post(jsonParser, (req, res, next) => {
+  .route("/users/:userId")
+  .post(requireAuth, jsonParser, (req, res, next) => {
     const db = req.app.get("db");
     const { title, content, rating } = req.body;
     if (!title || !content || !rating)
@@ -29,12 +30,9 @@ reviewsRouter
 
   //deal with error here
 
-reviewsRouter.route("/:reviewId")
+reviewsRouter.route("/users/:userId/:reviewId")
 .all(checkInstallmentExists)
-.get((req, res, next) => {
-    return res.status(200).json(res.review)
-})
-.delete((req, res, next) => {
+.delete(requireAuth, (req, res, next) => {
     const db = req.app.get("db")
     const {id} = res.review
     //YOU ARE HERE
@@ -42,7 +40,7 @@ reviewsRouter.route("/:reviewId")
     .then(() => res.status(204).end())
     .catch(next)
 })
-.patch(jsonParser, (req, res, next) => {
+.patch(requireAuth, jsonParser, (req, res, next) => {
     const db = req.app.get("db")
     const {title, content, rating} = req.body
     const newInfo = {title, content, rating}
@@ -52,6 +50,12 @@ reviewsRouter.route("/:reviewId")
     .then(review => {
         return res.status(200).json(review)
     }).catch(next)
+})
+
+reviewsRouter.route("/:reviewId")
+.all(checkInstallmentExists)
+.get((req, res, next) => {
+    return res.status(200).json(res.review)
 })
 
 //check if you should be returning the thing you're updating

@@ -4,20 +4,12 @@ const jsonParser = express.json();
 const installmentsRouter = express.Router();
 const path = require('path')
 const loggedInUser = 1; //this field will disappear once you introduce login
+const {requireAuth} = require("../middleware/jwt-auth")
 
 const validTypes = [ 'Book series', 'Comic series', 'Movie series', 'Show']
 installmentsRouter
-  .route("/:fandomId")
-  .get((req, res, next) => {
-    const db = req.app.get("db");
-    const fandomId = req.params.fandomId
-    InstallmentsService.getInstallmentsByFandom(db, fandomId)
-      .then((installments) => {
-        return res.status(200).json(installments);
-      })
-      .catch(next);
-  })
-  .post(jsonParser, (req, res, next) => {
+  .route("/users/:userId/:fandomId")
+  .post(requireAuth, jsonParser, (req, res, next) => {
     const db = req.app.get("db");
     const installmentsList = []
     for (let installment of req.body){
@@ -31,6 +23,17 @@ installmentsRouter
     installmentsList.push(installmentSingle)
     }
 
+  installmentsRouter
+  .route("/:fandomId")
+  .get((req, res, next) => {
+    const db = req.app.get("db");
+    const fandomId = req.params.fandomId
+    InstallmentsService.getInstallmentsByFandom(db, fandomId)
+      .then((installments) => {
+        return res.status(200).json(installments);
+      })
+      .catch(next);
+  })
     //debug posting sections, then on to posting reviews! think about that search functionality, if you dare, and how you plan to implement it
 
     // console.log(installmentsList)
@@ -40,19 +43,16 @@ installmentsRouter
   });
   //it was ok to delete the location thing in here right? since it was a list
 
-installmentsRouter.route("/:fandomId/:installmentId")
+installmentsRouter.route("/users/:userId/:fandomId/:installmentId")
 .all(checkInstallmentExists)
-.get((req, res, next) => {
-    return res.status(200).json(res.installment)
-})
-.delete((req, res, next) => {
+.delete(requireAuth, (req, res, next) => {
     const db = req.app.get("db")
     const {id} = res.installment
     InstallmentsService.deleteInstallment(db, id)
     .then(() => res.status(204).end())
     .catch(next)
 })
-.patch(jsonParser, (req, res, next) => {
+.patch(requireAuth, jsonParser, (req, res, next) => {
     const db = req.app.get("db")
     const {title, type} = req.body
     const newInfo = {title, type}
@@ -61,6 +61,12 @@ installmentsRouter.route("/:fandomId/:installmentId")
     .then(installment => {
         return res.status(200).json(installment)
     }).catch(next)
+})
+
+installmentsRouter.route("/:fandomId/:installmentId")
+.all(checkInstallmentExists)
+.get((req, res, next) => {
+    return res.status(200).json(res.installment)
 })
 
 //check if you should be returning the thing you're updating

@@ -3,12 +3,15 @@ const FandomsService = require("./fandoms-service");
 const jsonParser = express.json();
 const fandomsRouter = express.Router();
 const path = require('path')
+const {requireAuth} = require("../middleware/jwt-auth")
 
-const loggedInUser = 1; //this field will disappear once you introduce login
+//this field will disappear once you introduce login
 
-fandomsRouter
-  .route("/")
+  fandomsRouter
+  .route("/users/:userId")
   .get((req, res, next) => {
+    console.log(req.params)
+    const loggedInUser = req.params.userId
     const db = req.app.get("db");
     FandomsService.getFandomsByUser(db, loggedInUser)
       .then((fandoms) => {
@@ -16,7 +19,7 @@ fandomsRouter
       })
       .catch(next);
   })
-  .post(jsonParser, (req, res, next) => {
+  .post(requireAuth, jsonParser, (req, res, next) => {
     const db = req.app.get("db");
     const { title } = req.body;
     // console.log(req.body)
@@ -35,14 +38,17 @@ fandomsRouter.route("/:fandomId")
 .get((req, res, next) => {
     return res.status(200).json(res.fandom)
 })
-.delete((req, res, next) => {
+
+fandomsRouter.route("/users/:userId/:fandomId")
+.all(checkFandomExists)
+.delete(requireAuth, (req, res, next) => {
     const db = req.app.get("db")
     const {id} = res.fandom
     FandomsService.deleteFandom(db, id)
     .then(() => res.status(204).end())
     .catch(next)
 })
-.patch(jsonParser, (req, res, next) => {
+.patch(requireAuth, jsonParser, (req, res, next) => {
     const db = req.app.get("db")
     const {title} = req.body
     const newInfo = {title}

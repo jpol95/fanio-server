@@ -3,6 +3,7 @@ const SectionsService = require("./sections-service");
 const jsonParser = express.json();
 const sectionsRouter = express.Router();
 const { json } = require("express");
+const {requireAuth} = require("../middleware/jwt-auth")
 
 const loggedInUser = 1; //this field will disappear once you introduce login
 
@@ -19,24 +20,9 @@ const setType = (req, res, next) => {
 };
 
 sectionsRouter
-  .route(["/section/:installmentId", "/sub/:sectionId"])
+  .route(["/users/:userId/section/:installmentId", "/users/:userId/sub/:sectionId"])
   .all(setType)
-  .get((req, res, next) => {
-    const db = req.app.get("db");
-    // console.log(`${res.parent}Id`)
-    const parentId = req.params[`${res.parent}Id`];
-    SectionsService.getSectionsByParent(
-      db,
-      [res.parent, parentId],
-      res.tableName
-    )
-      .then((sections) => {
-        // console.log(sections)
-        return res.status(200).json(sections);
-      })
-      .catch(next);
-  })
-  .post(jsonParser, (req, res, next) => {
+  .post(requireAuth, jsonParser, (req, res, next) => {
     const db = req.app.get("db");
     const parentId = req.params[`${res.parent}Id`];
     const sections = []
@@ -57,24 +43,40 @@ sectionsRouter
       .catch(next);
   });
 
+  sectionsRouter
+  .route(["/section/:installmentId", "/sub/:sectionId"])
+  .all(setType)
+  .get((req, res, next) => {
+    const db = req.app.get("db");
+    // console.log(`${res.parent}Id`)
+    const parentId = req.params[`${res.parent}Id`];
+    SectionsService.getSectionsByParent(
+      db,
+      [res.parent, parentId],
+      res.tableName
+    )
+      .then((sections) => {
+        // console.log(sections)
+        return res.status(200).json(sections);
+      })
+      .catch(next);
+  })
+
 sectionsRouter
   .route([
-    "/section/:elementId",
-    "/sub/:elementId",
+    "/users/:userId/section/:elementId",
+    "/users/:userId/sub/:elementId",
   ])
   .all(setType)
   .all(checkSectionExists)
-  .get((req, res, next) => {
-    return res.status(200).json(res.section);
-  })
-  .delete((req, res, next) => {
+  .delete(requireAuth, (req, res, next) => {
     const db = req.app.get("db");
     const { id } = res.section;
     SectionsService.deleteSection(db, id, res.tableName)
       .then(() => res.status(204).end())
       .catch(next);
   })
-  .patch(jsonParser, (req, res, next) => {
+  .patch(requireAuth, jsonParser, (req, res, next) => {
     const db = req.app.get("db");
     const { title, order, reviewId } = req.body;
     const newInfo = { title, order, reviewId };
@@ -86,6 +88,17 @@ sectionsRouter
       })
       .catch(next);
   });
+
+  sectionsRouter
+  .route([
+    "/section/:elementId",
+    "/sub/:elementId",
+  ])
+  .all(setType)
+  .all(checkSectionExists)
+  .get((req, res, next) => {
+    return res.status(200).json(res.section);
+  })
 
 //check if you should be returning the thing you're updating
 

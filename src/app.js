@@ -12,6 +12,7 @@ const sectionsRouter = require('./sections/sections-router')
 const reviewsRouter = require('./reviews/reviews-router')
 const tagsRouter = require('./tags/tags-router')
 const trelsRouter = require('./tags/trels-router')
+const authRouter = require('./auth/auth-router')
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use(cors());
 app.use(errorHandler)
 // app.use(validateBearerToken);
 
+app.use("/api/auth", authRouter)
 app.use("/api/fandoms", fandomsRouter)
 app.use("/api/installments", installmentsRouter)
 app.use("/api/sections", sectionsRouter)

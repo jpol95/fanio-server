@@ -3,6 +3,7 @@ const TagsService = require("./tags-service");
 const jsonParser = express.json();
 const tagsRouter = express.Router();
 const path = require('path')
+const {requireAuth} = require('../middleware/jwt-auth')
 
 //when you load the reviews you have to load the tags toooooo
 
@@ -17,7 +18,7 @@ tagsRouter
       })
       .catch(next);
   })
-  .post(jsonParser, (req, res, next) => {
+  .post(requireAuth, jsonParser, (req, res, next) => {
     const db = req.app.get("db");
     const tags = req.body
     const tagArr = []
@@ -34,7 +35,7 @@ tagsRouter
   });
 
 tagsRouter
-  .route("/:tagId")
+  .route("/users/:userId/:tagId")
   .get((req, res, next) => {
       const db = req.app.get("db")
       const {tagId} = req.params.tagId
