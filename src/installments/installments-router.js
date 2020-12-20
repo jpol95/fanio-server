@@ -23,6 +23,15 @@ installmentsRouter
     installmentsList.push(installmentSingle)
     }
 
+    //debug posting sections, then on to posting reviews! think about that search functionality, if you dare, and how you plan to implement it
+
+    // console.log(installmentsList)
+    InstallmentsService.insertInstallments(db, installmentsList)
+      .then((installments) => res.status(201).json(installments))
+      .catch(next);
+  });
+  //it was ok to delete the location thing in here right? since it was a list
+
   installmentsRouter
   .route("/:fandomId")
   .get((req, res, next) => {
@@ -34,14 +43,6 @@ installmentsRouter
       })
       .catch(next);
   })
-    //debug posting sections, then on to posting reviews! think about that search functionality, if you dare, and how you plan to implement it
-
-    // console.log(installmentsList)
-    InstallmentsService.insertInstallments(db, installmentsList)
-      .then((installments) => res.status(201).json(installments))
-      .catch(next);
-  });
-  //it was ok to delete the location thing in here right? since it was a list
 
 installmentsRouter.route("/users/:userId/:fandomId/:installmentId")
 .all(checkInstallmentExists)
