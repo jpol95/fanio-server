@@ -3,7 +3,7 @@ const SectionsService = require("./sections-service");
 const jsonParser = express.json();
 const sectionsRouter = express.Router();
 const { json } = require("express");
-const {requireAuth} = require("../middleware/jwt-auth")
+const {requireLoggedInUser, requireAuth} = require("../middleware/jwt-auth")
 
 const loggedInUser = 1; //this field will disappear once you introduce login
 
@@ -22,7 +22,7 @@ const setType = (req, res, next) => {
 sectionsRouter
   .route(["/users/:userId/section/:installmentId", "/users/:userId/sub/:sectionId"])
   .all(setType)
-  .post(requireAuth, jsonParser, (req, res, next) => {
+  .post(requireAuth, requireLoggedInUser, jsonParser, (req, res, next) => {
     const db = req.app.get("db");
     const parentId = req.params[`${res.parent}Id`];
     const sections = []
@@ -69,14 +69,14 @@ sectionsRouter
   ])
   .all(setType)
   .all(checkSectionExists)
-  .delete(requireAuth, (req, res, next) => {
+  .delete(requireAuth, requireLoggedInUser, (req, res, next) => {
     const db = req.app.get("db");
     const { id } = res.section;
     SectionsService.deleteSection(db, id, res.tableName)
       .then(() => res.status(204).end())
       .catch(next);
   })
-  .patch(requireAuth, jsonParser, (req, res, next) => {
+  .patch(requireAuth, requireLoggedInUser, jsonParser, (req, res, next) => {
     const db = req.app.get("db");
     const { title, order, reviewId } = req.body;
     const newInfo = { title, order, reviewId };

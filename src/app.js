@@ -13,6 +13,7 @@ const reviewsRouter = require('./reviews/reviews-router')
 const tagsRouter = require('./tags/tags-router')
 const trelsRouter = require('./tags/trels-router')
 const authRouter = require('./auth/auth-router')
+const usersRouter = require('./users/users-router')
 
 const app = express();
 
@@ -32,4 +33,5 @@ app.use("/api/sections", sectionsRouter)
 app.use("/api/reviews", reviewsRouter)
 app.use("/api/tags", tagsRouter)
 app.use("/api/trels", trelsRouter)
+app.use("/api/users", usersRouter)
 module.exports = app;

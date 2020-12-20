@@ -4,12 +4,12 @@ const jsonParser = express.json();
 const installmentsRouter = express.Router();
 const path = require('path')
 const loggedInUser = 1; //this field will disappear once you introduce login
-const {requireAuth} = require("../middleware/jwt-auth")
+const {requireLoggedInUser, requireAuth} = require("../middleware/jwt-auth")
 
 const validTypes = [ 'Book series', 'Comic series', 'Movie series', 'Show']
 installmentsRouter
   .route("/users/:userId/:fandomId")
-  .post(requireAuth, jsonParser, (req, res, next) => {
+  .post(requireAuth, requireLoggedInUser,  jsonParser, (req, res, next) => {
     const db = req.app.get("db");
     const installmentsList = []
     for (let installment of req.body){
@@ -46,14 +46,14 @@ installmentsRouter
 
 installmentsRouter.route("/users/:userId/:fandomId/:installmentId")
 .all(checkInstallmentExists)
-.delete(requireAuth, (req, res, next) => {
+.delete(requireAuth, requireLoggedInUser, (req, res, next) => {
     const db = req.app.get("db")
     const {id} = res.installment
     InstallmentsService.deleteInstallment(db, id)
     .then(() => res.status(204).end())
     .catch(next)
 })
-.patch(requireAuth, jsonParser, (req, res, next) => {
+.patch(requireAuth, requireLoggedInUser, jsonParser, (req, res, next) => {
     const db = req.app.get("db")
     const {title, type} = req.body
     const newInfo = {title, type}

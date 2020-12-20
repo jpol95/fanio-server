@@ -1,5 +1,10 @@
 const AuthService = require('../auth/auth-service')
 
+function requireLoggedInUser(req, res, next) {
+  if (req.user.id !== req.params.userId) return res.status(401).json({error: 'Unauthorized Request'})
+  next()
+}
+
 function requireAuth(req, res, next) {
   const authToken = req.get('Authorization') || ''
 
@@ -18,8 +23,7 @@ function requireAuth(req, res, next) {
       payload.sub,
     )
       .then(user => {
-        const postUserId = req.params.userId
-        if (!user || user.id !== postUserId)
+        if (!user)
           return res.status(401).json({ error: 'Unauthorized request' })
         req.user = user
         next()
@@ -35,4 +39,5 @@ function requireAuth(req, res, next) {
 
 module.exports = {
   requireAuth,
+  requireLoggedInUser
 }

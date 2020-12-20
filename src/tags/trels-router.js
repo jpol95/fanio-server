@@ -3,7 +3,7 @@ const TrelsService = require("./trels-service");
 const jsonParser = express.json();
 const trelsRouter = express.Router();
 const path = require('path')
-const {requireAuth} = require("../middleware/jwt-auth")
+const {requireLoggedInUser, requireAuth} = require("../middleware/jwt-auth")
 
 const loggedInUser = 1; //this field will disappear once you introduce login
 
@@ -19,7 +19,7 @@ trelsRouter
       })
       .catch(next);
   })
-  .post(requireAuth, jsonParser, (req, res, next) => {
+  .post(requireAuth, requireLoggedInUser, jsonParser, (req, res, next) => {
     const db = req.app.get("db");
     const trels = req.body
     const trelArr = []

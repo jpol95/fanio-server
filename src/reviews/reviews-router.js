@@ -4,7 +4,7 @@ const jsonParser = express.json();
 const reviewsRouter = express.Router();
 const path = require('path')
 const loggedInUser = 1; //this field will disappear once you introduce login
-const {requireAuth} = require("../middleware/jwt-auth")
+const {requireLoggedInUser, requireAuth} = require("../middleware/jwt-auth")
 
 const validRating = (rating) => {
     if (rating > 5 || rating < 0 || !Number.isInteger(Number(rating))) return false
@@ -16,7 +16,7 @@ const validTypes = [ 'Book series', 'Comic series', 'Movie series', 'Show']
 
 reviewsRouter
   .route("/users/:userId")
-  .post(requireAuth, jsonParser, (req, res, next) => {
+  .post(requireAuth, requireLoggedInUser, jsonParser, (req, res, next) => {
     const db = req.app.get("db");
     const { title, content, rating } = req.body;
     if (!title || !content || !rating)
@@ -32,7 +32,7 @@ reviewsRouter
 
 reviewsRouter.route("/users/:userId/:reviewId")
 .all(checkInstallmentExists)
-.delete(requireAuth, (req, res, next) => {
+.delete(requireAuth, requireLoggedInUser, (req, res, next) => {
     const db = req.app.get("db")
     const {id} = res.review
     //YOU ARE HERE
@@ -40,7 +40,7 @@ reviewsRouter.route("/users/:userId/:reviewId")
     .then(() => res.status(204).end())
     .catch(next)
 })
-.patch(requireAuth, jsonParser, (req, res, next) => {
+.patch(requireAuth, requireLoggedInUser, jsonParser, (req, res, next) => {
     const db = req.app.get("db")
     const {title, content, rating} = req.body
     const newInfo = {title, content, rating}
