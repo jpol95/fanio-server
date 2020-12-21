@@ -1,7 +1,7 @@
 const AuthService = require('../auth/auth-service')
 
 function requireLoggedInUser(req, res, next) {
-  if (req.user.id !== req.params.userId) return res.status(401).json({error: 'Unauthorized Request'})
+  if (req.user.id !== Number(req.params.userId)) return res.status(401).json({error: 'Unauthorized Request'})
   next()
 }
 

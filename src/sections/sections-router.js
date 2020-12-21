@@ -8,8 +8,9 @@ const {requireLoggedInUser, requireAuth} = require("../middleware/jwt-auth")
 const loggedInUser = 1; //this field will disappear once you introduce login
 
 const setType = (req, res, next) => {
+  const urlArray = req.originalUrl.split("/")
   const db = req.app.get("db");
-  if (req.params.sectionId) {
+  if (urlArray.includes("sub")) {
     res.tableName = "subs";
     res.parent = "section";
   } else {
@@ -64,12 +65,15 @@ sectionsRouter
 
 sectionsRouter
   .route([
-    "/users/:userId/section/:elementId",
-    "/users/:userId/sub/:elementId",
+    "/users/:userId/section/:sectionId",
+    "/users/:userId/sub/:subId",
   ])
   .all(setType)
   .all(checkSectionExists)
   .delete(requireAuth, requireLoggedInUser, (req, res, next) => {
+    console.log("this is me deleting")
+    console.log(req.params)
+    console.log(res.tableName)
     const db = req.app.get("db");
     const { id } = res.section;
     SectionsService.deleteSection(db, id, res.tableName)
@@ -91,8 +95,8 @@ sectionsRouter
 
   sectionsRouter
   .route([
-    "/section/:elementId",
-    "/sub/:elementId",
+    "/section/:sectionId",
+    "/sub/:subId",
   ])
   .all(setType)
   .all(checkSectionExists)
@@ -105,7 +109,7 @@ sectionsRouter
 async function checkSectionExists(req, res, next) {
   try {
     const db = req.app.get("db");
-    const id = req.params.elementId;
+    const id = req.params.sectionId || req.params.subId;
     const section = await SectionsService.getSectionById(db, id, res.tableName);
     if (!section) return res.status(400).json({ error: "Section not found" });
     res.section = section;

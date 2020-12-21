@@ -1,4 +1,2 @@
-drop table if exists episodes;
-drop table if exists issues;
-
+drop table if exists subs;
 --create table for tags and taglist relationship

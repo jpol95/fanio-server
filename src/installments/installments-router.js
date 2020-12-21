@@ -44,7 +44,7 @@ installmentsRouter
       .catch(next);
   })
 
-installmentsRouter.route("/users/:userId/:fandomId/:installmentId")
+installmentsRouter.route("/users/:userId/:installmentId")
 .all(checkInstallmentExists)
 .delete(requireAuth, requireLoggedInUser, (req, res, next) => {
     const db = req.app.get("db")
