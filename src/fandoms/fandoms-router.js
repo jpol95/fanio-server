@@ -26,6 +26,7 @@ const {requireLoggedInUser, requireAuth} = require("../middleware/jwt-auth")
     if (!title)
       return res.status(400).json({ error: "Must provide title for fandom" });
     const fandom = { title };
+    const loggedInUser = req.params.userId
     fandom.userId = loggedInUser;
     // console.log(fandom)
     FandomsService.insertFandom(db, fandom)

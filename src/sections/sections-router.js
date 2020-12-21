@@ -21,7 +21,7 @@ const setType = (req, res, next) => {
 };
 
 sectionsRouter
-  .route(["/section", "/sub"])
+  .route(["/section/parent/:installmentId", "/sub/parent/:sectionId"])
   .all(setType)
   .post(requireAuth, requireLoggedInUser, jsonParser, (req, res, next) => {
     const db = req.app.get("db");
@@ -87,15 +87,7 @@ sectionsRouter
         return res.status(200).json(section);
       })
       .catch(next);
-  });
-
-  sectionsRouter
-  .route([
-    "/section/:sectionId",
-    "/sub/:subId",
-  ])
-  .all(setType)
-  .all(checkSectionExists)
+  })
   .get((req, res, next) => {
     return res.status(200).json(res.section);
   })

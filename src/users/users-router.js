@@ -41,7 +41,7 @@ const invalidPassword = (password) => {
   function checkUserExists(req, res, next){
     const db = req.app.get("db")
        UsersService
-      .getUserById(db, req.params.userId)
+      .getUserByUserId(db, req.params.userId)
       .then(user => {
         if (!user) return res.status(400).json({error: 'User not found'})
         req.userUrl = user

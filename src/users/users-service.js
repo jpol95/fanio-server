@@ -2,12 +2,12 @@ const xss = require('xss')
 const bcrypt = require('bcryptjs')
 
 const UsersService = {
-  async getUserByReview(db, id){
-    const secInfo = await getSecByReview(db, id)
+  async getUserByReviewId(db, id){
+    const secInfo = await getSecByReviewId(db, id)
     const user = await UsersService[`getUserBy${secInfo.functionName}`]
     return user
   },
-  async getSecByReview(db, reviewId){
+  async getSecByReviewId(db, reviewId){
     const sub = await db("subs")
     .select('*')
     .where({reviewId})
@@ -17,42 +17,42 @@ const UsersService = {
     .where({reviewId})
     
     const result = section.length === 0 ? sub[0] : section[0]
-    const functionName = section.length === 0 ? "Sub" : "Section"
+    const functionName = section.length === 0 ? "SubId" : "SectionId"
     return {result, functionName}
   },
-  async getUserBySub(db, id){
+  async getUserBySubId(db, id){
     const sub = await db("subId")
     .select("*")
     .where({id})
     .first()
-    const user = await UsersService.getUserBySection(db, user.sectionId)
+    const user = await UsersService.getUserBySectionId(db, user.sectionId)
     return user
   },
-    async getUserBySection(db, id){
+    async getUserBySectionId(db, id){
       const section = await db("sections")
       .select("*")
       .where({id})
       .first()
-      const user = await UsersService.getUserByInstallment(db, section.installmentId)
+      const user = await UsersService.getUserByInstallmentId(db, section.installmentId)
       return user
     },
-    async getUserInstallment(db, id){
+    async getUserByInstallmentId(db, id){
       const installment = await db("installments")
       .select("*")
       .where({id})
       .first()
-      const user = await UsersService.getUserByFandom(db, installment.fandomId)
+      const user = await UsersService.getUserByFandomId(db, installment.fandomId)
       return user
     },
-    async getUserByFandom (db, id){
+    async getUserByFandomId (db, id){
       const fandom = await db("fandoms")
       .select("*")
       .where({id})
       .first()
-      const user = await UsersService.getUserById(db, fandom.userId)
+      const user = await UsersService.getUserByUserId(db, fandom.userId)
       return user;
     },
-    getUserById(db, id) {
+    getUserByUserId(db, id) {
         return db("users")
         .select("*")
         .where({ id })

@@ -1,13 +1,25 @@
 const AuthService = require('../auth/auth-service')
+const UsersService = require('../users/users-service')
 
-function requireLoggedInUser(req, res, next) {
-  if (req.user.id !== Number(req.params.userId)) return res.status(401).json({error: 'Unauthorized Request'})
+async function requireLoggedInUser(req, res, next){
+  try {
+  for (let field in req.params){
+    if (!req.params[field]) delete req.params[field] 
+  }
+  const db = req.app.get("db")
+  const accessedId = Object.values(req.params)[0]
+  const funcName = Object.keys(req.params)[0].charAt(0).toUpperCase() +  Object.keys(req.params)[0].slice(1)
+  console.log(UsersService[`getUserBy${funcName}`])
+  const accessedUser = await UsersService[`getUserBy${funcName}`](db, accessedId)
+  if (accessedUser.id !== req.user.id) return res.status(401).json({error: 'Unauthorized Request'})
   next()
+  } catch(error){
+    next(error)
+  }
 }
 
 function requireAuth(req, res, next) {
   const authToken = req.get('Authorization') || ''
-
   let bearerToken
   if (!authToken.toLowerCase().startsWith('bearer ')) {
     return res.status(401).json({ error: 'Missing bearer token' })

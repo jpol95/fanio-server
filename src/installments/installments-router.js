@@ -3,12 +3,12 @@ const InstallmentsService = require("./installments-service");
 const jsonParser = express.json();
 const installmentsRouter = express.Router();
 const path = require('path')
-const loggedInUser = 1; //this field will disappear once you introduce login
+
 const {requireLoggedInUser, requireAuth} = require("../middleware/jwt-auth")
 
 const validTypes = [ 'Book series', 'Comic series', 'Movie series', 'Show']
 installmentsRouter
-  .route("/")
+  .route("/parent/:fandomId")
   .post(requireAuth, requireLoggedInUser,  jsonParser, (req, res, next) => {
     const db = req.app.get("db");
     const installmentsList = []
