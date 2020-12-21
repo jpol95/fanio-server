@@ -8,7 +8,7 @@ const {requireLoggedInUser, requireAuth} = require("../middleware/jwt-auth")
 
 const validTypes = [ 'Book series', 'Comic series', 'Movie series', 'Show']
 installmentsRouter
-  .route("/users/:userId/:fandomId")
+  .route("/")
   .post(requireAuth, requireLoggedInUser,  jsonParser, (req, res, next) => {
     const db = req.app.get("db");
     const installmentsList = []
@@ -24,16 +24,12 @@ installmentsRouter
     }
 
     //debug posting sections, then on to posting reviews! think about that search functionality, if you dare, and how you plan to implement it
-
+  //it was ok to delete the location thing in here right? since it was a list
     // console.log(installmentsList)
     InstallmentsService.insertInstallments(db, installmentsList)
       .then((installments) => res.status(201).json(installments))
       .catch(next);
-  });
-  //it was ok to delete the location thing in here right? since it was a list
-
-  installmentsRouter
-  .route("/:fandomId")
+  })
   .get((req, res, next) => {
     const db = req.app.get("db");
     const fandomId = req.params.fandomId
@@ -44,8 +40,11 @@ installmentsRouter
       .catch(next);
   })
 
-installmentsRouter.route("/users/:userId/:installmentId")
+installmentsRouter.route("/:installmentId")
 .all(checkInstallmentExists)
+.get((req, res, next) => {
+  return res.status(200).json(res.installment)
+})
 .delete(requireAuth, requireLoggedInUser, (req, res, next) => {
     const db = req.app.get("db")
     const {id} = res.installment
@@ -62,12 +61,6 @@ installmentsRouter.route("/users/:userId/:installmentId")
     .then(installment => {
         return res.status(200).json(installment)
     }).catch(next)
-})
-
-installmentsRouter.route("/:fandomId/:installmentId")
-.all(checkInstallmentExists)
-.get((req, res, next) => {
-    return res.status(200).json(res.installment)
 })
 
 //check if you should be returning the thing you're updating

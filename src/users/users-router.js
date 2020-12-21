@@ -3,7 +3,7 @@ const UsersService = require("./users-service");
 const jsonParser = express.json();
 const usersRouter = express.Router();
 const path = require('path')
-const {requireAuth} = require("../middleware/jwt-auth")
+const {requireAuth, requireLoggedInUser} = require("../middleware/jwt-auth")
 
 //this field will disappear once you introduce login
 
@@ -26,6 +26,29 @@ const invalidPassword = (password) => {
   .get(requireAuth, (req, res, next) => {
     return res.status(200).json({userId: req.user.id})
   })
+
+  usersRouter
+  .route("/user/:userId")
+  .delete(requireAuth, requireLoggedInUser, checkUserExists, (req, res, next) => {
+    console.log("hello")
+    const db = req.app.get("db")
+    UsersService.deleteUserById(db, req.userUrl.id)
+    .then(() => {
+      return res.status(204).end()
+    }).catch(next)
+  })
+
+  function checkUserExists(req, res, next){
+    const db = req.app.get("db")
+       UsersService
+      .getUserById(db, req.params.userId)
+      .then(user => {
+        if (!user) return res.status(400).json({error: 'User not found'})
+        req.userUrl = user
+        next()
+      }).catch(next)
+
+  }
 
   usersRouter
   .route("/")
@@ -52,3 +75,6 @@ const invalidPassword = (password) => {
   })
 
   module.exports = usersRouter
+
+
+  //finish deleting, try to finish patch by tomorrow

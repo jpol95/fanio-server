@@ -35,7 +35,7 @@ tagsRouter
   });
 
 tagsRouter
-  .route("/users/:userId/:tagId")
+  .route("/:tagId")
   .get((req, res, next) => {
       const db = req.app.get("db")
       const {tagId} = req.params.tagId

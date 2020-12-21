@@ -21,7 +21,7 @@ const setType = (req, res, next) => {
 };
 
 sectionsRouter
-  .route(["/users/:userId/section/:installmentId", "/users/:userId/sub/:sectionId"])
+  .route(["/section", "/sub"])
   .all(setType)
   .post(requireAuth, requireLoggedInUser, jsonParser, (req, res, next) => {
     const db = req.app.get("db");
@@ -42,11 +42,7 @@ sectionsRouter
     SectionsService.insertSections(db, sections, res.tableName)
       .then((sections) => res.status(201).json(sections))
       .catch(next);
-  });
-
-  sectionsRouter
-  .route(["/section/:installmentId", "/sub/:sectionId"])
-  .all(setType)
+  })
   .get((req, res, next) => {
     const db = req.app.get("db");
     // console.log(`${res.parent}Id`)
@@ -65,8 +61,8 @@ sectionsRouter
 
 sectionsRouter
   .route([
-    "/users/:userId/section/:sectionId",
-    "/users/:userId/sub/:subId",
+    "/section/:sectionId",
+    "/sub/:subId",
   ])
   .all(setType)
   .all(checkSectionExists)

@@ -38,9 +38,6 @@ fandomsRouter.route("/:fandomId")
 .get((req, res, next) => {
     return res.status(200).json(res.fandom)
 })
-
-fandomsRouter.route("/users/:userId/:fandomId")
-.all(checkFandomExists)
 .delete(requireAuth, requireLoggedInUser, (req, res, next) => {
     const db = req.app.get("db")
     const {id} = res.fandom

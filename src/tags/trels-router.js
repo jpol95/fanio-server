@@ -52,7 +52,7 @@ trelsRouter.route("/:tagId/:reviewId")
     .catch(next);
 });
 
-trelsRouter.route("/users/:userId/:reviewId")
+trelsRouter.route("/:reviewId")
 .delete((req, res, next) => {
   const db = req.app.get("db");
   const { reviewId } = req.params;

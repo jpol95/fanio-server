@@ -15,7 +15,7 @@ const validTypes = [ 'Book series', 'Comic series', 'Movie series', 'Show']
 
 
 reviewsRouter
-  .route("/users/:userId")
+  .route("/")
   .post(requireAuth, requireLoggedInUser, jsonParser, (req, res, next) => {
     const db = req.app.get("db");
     const { title, content, rating } = req.body;
@@ -30,8 +30,11 @@ reviewsRouter
 
   //deal with error here
 
-reviewsRouter.route("/users/:userId/:reviewId")
+reviewsRouter.route("/:reviewId")
 .all(checkInstallmentExists)
+.get((req, res, next) => {
+  return res.status(200).json(res.review)
+})
 .delete(requireAuth, requireLoggedInUser, (req, res, next) => {
     const db = req.app.get("db")
     const {id} = res.review
@@ -52,11 +55,7 @@ reviewsRouter.route("/users/:userId/:reviewId")
     }).catch(next)
 })
 
-reviewsRouter.route("/:reviewId")
-.all(checkInstallmentExists)
-.get((req, res, next) => {
-    return res.status(200).json(res.review)
-})
+
 
 //check if you should be returning the thing you're updating
 
