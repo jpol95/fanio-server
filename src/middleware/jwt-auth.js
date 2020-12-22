@@ -9,8 +9,8 @@ async function requireLoggedInUser(req, res, next){
   const db = req.app.get("db")
   const accessedId = Object.values(req.params)[0]
   const funcName = Object.keys(req.params)[0].charAt(0).toUpperCase() +  Object.keys(req.params)[0].slice(1)
-  console.log(UsersService[`getUserBy${funcName}`])
   const accessedUser = await UsersService[`getUserBy${funcName}`](db, accessedId)
+  console.log("This is an accesseduser id" + funcName)
   if (accessedUser.id !== req.user.id) return res.status(401).json({error: 'Unauthorized Request'})
   next()
   } catch(error){

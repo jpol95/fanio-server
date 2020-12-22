@@ -3,8 +3,9 @@ const bcrypt = require('bcryptjs')
 
 const UsersService = {
   async getUserByReviewId(db, id){
-    const secInfo = await getSecByReviewId(db, id)
-    const user = await UsersService[`getUserBy${secInfo.functionName}`]
+    const secInfo = await UsersService.getSecByReviewId(db, id)
+    console.log(secInfo)
+    const user = await UsersService[`getUserBy${secInfo.functionName}`](db, secInfo.result.id)
     return user
   },
   async getSecByReviewId(db, reviewId){
@@ -21,11 +22,11 @@ const UsersService = {
     return {result, functionName}
   },
   async getUserBySubId(db, id){
-    const sub = await db("subId")
+    const sub = await db("subs")
     .select("*")
     .where({id})
     .first()
-    const user = await UsersService.getUserBySectionId(db, user.sectionId)
+    const user = await UsersService.getUserBySectionId(db, sub.sectionId)
     return user
   },
     async getUserBySectionId(db, id){
