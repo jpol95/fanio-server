@@ -1,5 +1,6 @@
 const TrelsService = {
     getTrelById : (db, tagId, reviewId) => {
+        
         return db("review_tag_rels")
         .where({tagId, reviewId})
         .select('*')
@@ -20,7 +21,7 @@ const TrelsService = {
         .insert(trelList)
         .returning('*')
     }, 
-    delete : (db, reviewId) => {
+    deleteTrelsByReviewId : (db, reviewId) => {   
         return db("review_tag_rels")
         .where({reviewId})
         .delete()

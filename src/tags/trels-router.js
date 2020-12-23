@@ -58,13 +58,13 @@ trelsRouter.route("/:reviewId")
 .delete((req, res, next) => {
   const db = req.app.get("db");
   const { reviewId } = req.params;
-  TrelsService.getTrelById(reviewId).then((trels) => {
+  TrelsService.getTrelsByReviewId(db, reviewId).then((trels) => {
     if (trels.length === 0)
       return res
         .status(400)
         .json({ error: "No tag-review relationships for given review found" });
 
-    TrelsService.deleteTrelByReview(db, reviewId).then(() => {
+    TrelsService.deleteTrelsByReviewId(db, reviewId).then(() => {
       return res.status(204).end();
     });
   });
