@@ -41,7 +41,7 @@ trelsRouter.route("/:reviewId")
   const trels = req.body;
   const trelArr = [];
   const reviewId = req.params.reviewId
-  console.log(trels)
+  // console.log(trels)
   for (let trel of trels) {
     const { tagId } = trel;
     if (!tagId || !reviewId)

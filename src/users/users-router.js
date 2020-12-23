@@ -29,8 +29,15 @@ const invalidPassword = (password) => {
 
   usersRouter
   .route("/user/:userId")
+  .get(checkUserExists, (req, res, next) => {
+    const db = req.app.get("db")
+    UsersService.getUserByUserId(db, req.userUrl.id)
+    .then((user) => {
+      return res.status(200).json(user)
+    }).catch(next)
+  })
   .delete(requireAuth, requireLoggedInUser, checkUserExists, (req, res, next) => {
-    console.log("hello")
+    // console.log("hello")
     const db = req.app.get("db")
     UsersService.deleteUserById(db, req.userUrl.id)
     .then(() => {

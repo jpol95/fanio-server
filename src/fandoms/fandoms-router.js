@@ -10,7 +10,7 @@ const {requireLoggedInUser, requireAuth} = require("../middleware/jwt-auth")
   fandomsRouter
   .route("/users/:userId")
   .get((req, res, next) => {
-    console.log(req.params)
+    // console.log(req.params)
     const loggedInUser = req.params.userId
     const db = req.app.get("db");
     FandomsService.getFandomsByUser(db, loggedInUser)

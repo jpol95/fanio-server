@@ -67,9 +67,9 @@ sectionsRouter
   .all(setType)
   .all(checkSectionExists)
   .delete(requireAuth, requireLoggedInUser, (req, res, next) => {
-    console.log("this is me deleting")
-    console.log(req.params)
-    console.log(res.tableName)
+    // console.log("this is me deleting")
+    // console.log(req.params)
+    // console.log(res.tableName)
     const db = req.app.get("db");
     const { id } = res.section;
     SectionsService.deleteSection(db, id, res.tableName)

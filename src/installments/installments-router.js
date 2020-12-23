@@ -56,6 +56,7 @@ installmentsRouter.route("/:installmentId")
     const db = req.app.get("db")
     const {title, type} = req.body
     const newInfo = {title, type}
+    console.log(req.body)
     if (!title && !type) return res.status(400).json({error: 'Missing a required field(s)'})
     InstallmentsService.updateInstallment(db, res.installment.id, newInfo)
     .then(installment => {

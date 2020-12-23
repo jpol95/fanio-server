@@ -49,7 +49,7 @@ reviewsRouter.route("/:reviewId")
     const newInfo = {title, content, rating}
     if (!title && !content && !rating) return res.status(400).json({error: 'Must update either review title or content'})
     if (rating && !validRating(rating)) res.status(400).json({ error: "Rating must be an integer between 0 and 5" });
-    console.log(title, content, rating, validRating(rating))
+    // console.log(title, content, rating, validRating(rating))
     ReviewsService.updateReview(db, res.review.id, newInfo)
     .then(review => {
         return res.status(200).json(review)

@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs')
 const UsersService = {
   async getUserByReviewId(db, id){
     const secInfo = await UsersService.getSecByReviewId(db, id)
-    console.log(secInfo)
+    // console.log(secInfo)
     const user = await UsersService[`getUserBy${secInfo.functionName}`](db, secInfo.result.id)
     return user
   },
