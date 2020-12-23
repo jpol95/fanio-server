@@ -19,23 +19,6 @@ trelsRouter
       })
       .catch(next);
   })
-  .post(requireAuth, requireLoggedInUser, jsonParser, (req, res, next) => {
-    const db = req.app.get("db");
-    const trels = req.body;
-    const trelArr = [];
-    for (let trel of trels) {
-      const { tagId, reviewId } = trel;
-      if (!tagId || !reviewId)
-        return res
-          .status(400)
-          .json({ error: "Must provide tagId and reviewId" });
-      const singleTag = { tagId, reviewId };
-      trelArr.push(singleTag);
-    }
-    TrelsService.insertTrels(db, trelArr)
-      .then((trel) => res.status(201).json(trel))
-      .catch(next);
-  });
 
 trelsRouter.route("/:tagId/:reviewId")
 .get((req, res, next) => {
@@ -53,6 +36,25 @@ trelsRouter.route("/:tagId/:reviewId")
 });
 
 trelsRouter.route("/:reviewId")
+.post(requireAuth, requireLoggedInUser, jsonParser, (req, res, next) => {
+  const db = req.app.get("db");
+  const trels = req.body;
+  const trelArr = [];
+  const reviewId = req.params.reviewId
+  console.log(trels)
+  for (let trel of trels) {
+    const { tagId } = trel;
+    if (!tagId || !reviewId)
+      return res
+        .status(400)
+        .json({ error: "Must provide tagId and reviewId" });
+    const singleTag = { tagId, reviewId };
+    trelArr.push(singleTag);
+  }
+  TrelsService.insertTrels(db, trelArr)
+    .then((trel) => res.status(201).json(trel))
+    .catch(next);
+})
 .delete((req, res, next) => {
   const db = req.app.get("db");
   const { reviewId } = req.params;

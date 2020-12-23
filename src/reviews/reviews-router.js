@@ -16,7 +16,7 @@ const validTypes = [ 'Book series', 'Comic series', 'Movie series', 'Show']
 
 reviewsRouter
   .route("/")
-  .post(requireAuth, requireLoggedInUser, jsonParser, (req, res, next) => {
+  .post(jsonParser, (req, res, next) => {
     const db = req.app.get("db");
     const { title, content, rating } = req.body;
     if (!title || !content || !rating)
