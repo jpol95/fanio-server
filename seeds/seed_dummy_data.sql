@@ -22,6 +22,7 @@ insert into
     users(
         username,
         password,
+        fullname,
         education,
         interests,
         city
@@ -30,6 +31,7 @@ values
     (
         'kingbumii',
         '$2y$12$4R1JkopQ4LgjXH27bUAV5OwezOQLoBP6Yv7mbd.Nv7V67yBSmepZq',
+        'Jesse Pollack',
         'Purple University',
         array ['skating', 'softball', 'listending to show tunes', 'knitting'],
         'Gallifrey'

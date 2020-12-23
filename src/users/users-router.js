@@ -33,7 +33,9 @@ const invalidPassword = (password) => {
     const db = req.app.get("db")
     UsersService.getUserByUserId(db, req.userUrl.id)
     .then((user) => {
-      return res.status(200).json(user)
+      const {id, username, fullname, birthday, education, interests, city} = user
+      const userToReturn = {id, username, fullname, birthday, education, interests, city}
+      return res.status(200).json(userToReturn)
     }).catch(next)
   })
   .delete(requireAuth, requireLoggedInUser, checkUserExists, (req, res, next) => {

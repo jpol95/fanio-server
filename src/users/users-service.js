@@ -72,7 +72,7 @@ const UsersService = {
           .into("users")
           .returning("*")
           .then((rows) => rows[0])
-          .then((user) => UsersService.getUserById(db, user.id));
+          .then((user) => UsersService.getUserByUserId(db, user.id));
       }, 
       hashPassword(password) {
         return bcrypt.hash(password, 12)
