@@ -66,6 +66,16 @@ const UsersService = {
       .delete()
       
     },
+    updateUser(db, id, newInfo){
+      return db("users")
+      .where({id})
+      .update({...newInfo})
+      .returning('*')
+      .then(rows => rows[0])
+      .then(user => {
+        return UsersService.serializeUser(user)
+      })
+    },
     insertUser(db, user) {
         return db
           .insert(user)

@@ -38,8 +38,22 @@ const invalidPassword = (password) => {
       return res.status(200).json(userToReturn)
     }).catch(next)
   })
+  .patch(requireAuth, requireLoggedInUser, checkUserExists, jsonParser, (req, res, next) => {
+    const db = req.app.get("db")
+    console.log(req.body)
+    const {fullname, interests, city, education} = req.body
+    if (!fullname && !interests && !city && education) return res.status(400).json({error: { message: "Must provide data to update"}})
+    const newInfo = {fullname, interests, city, education}
+    for (let field in newInfo) {
+      if (!newInfo[field]) delete newInfo[field]
+    }
+    UsersService.updateUser(db, req.userUrl.id, newInfo)
+    .then((user) => {
+      return res.status(200).json(user)
+    }).catch(next)
+  })
   .delete(requireAuth, requireLoggedInUser, checkUserExists, (req, res, next) => {
-    // console.log("hello")
+    //is it not redundant to check if the user exists? Aren't the auth middlewares pretty much already doing that
     const db = req.app.get("db")
     UsersService.deleteUserById(db, req.userUrl.id)
     .then(() => {
