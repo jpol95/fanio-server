@@ -63,23 +63,40 @@ describe.only("fandoms-endpoints", () => {
         .set('Authorization', `Bearer ${wrongAuthToken}`)
         .expect(401)
     })
+    it("PATCH /api/installments/:installmentId should return 200 and updated installment", () => {
+        const testInstallmentId = 4
+        const editedInstallment = {title: "Buffy Comic Series Updated", type: "Movie series" }
+        const expected = {id: 4, title: "Buffy Comic Series Updated", type: "Movie series", fandomId: 4}
+        return supertest(app)
+        .patch(`/api/installments/${testInstallmentId}`)
+        .set('Authorization', `Bearer ${authToken}`)
+        .send(editedInstallment)
+        .expect(200)
+        .then(() => {
+            return supertest(app)
+            .get(`/api/installments/${testInstallmentId}`)
+            .expect(200, expected)
+
+        })
+    })
   })
 })
 
 //context data present --> 
 //get specific installment 200, check
 //get all installments 200, check
-//delete installment 200, 
-//should return 401 if user unauthorized
-//should return 400 if installment not found, 
+//delete installment 200, check
+//should return 401 if user unauthorized check
 //patch should return 200 if all required data present
 //patch should return 400 if no required data present, 
+//patch should return 400 if invalid type submitted
 //patch should return 200 if some required data present
 //patch should return 401 if user is unauthorized
 
 //if no data present --> 
 //get specific installment should return 400 if installment not there, 
 //get all installments 400 if parent fandom does not exist
+//delete should return 400 if installment not found, 
 //post should return 200 if required fields present,
 //post should return 400 if installment type is invalid
 //post should return 400 if required field missing, 
