@@ -69,8 +69,8 @@ describe("fandoms-endpoints", () => {
         const updatedFandom = {title: "This is an updated fandom"}
         const expected = { id: 3, title: "This is an updated fandom", userId: 1 }
         return supertest(app)
-        .set(`Authorization`, `Bearer ${authToken}`)
         .patch(`/api/fandoms/${testFandom}`)
+        .set(`Authorization`, `Bearer ${authToken}`)
         .send(updatedFandom)
         .expect(200, expected)
 
