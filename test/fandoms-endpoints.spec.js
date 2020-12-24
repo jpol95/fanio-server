@@ -5,6 +5,7 @@ const knex = require("knex");
 const testHelper = require("./fandoms.fixtures");
 
 const authToken = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJpYXQiOjE2MDg3NjAyNjIsInN1YiI6ImtpbmdidW1paSJ9.H6qR3kpROuueininbMukdIjzA00Af5Q-PcTh_c59O1Q`
+const wrongAuthToken = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJpYXQiOjE2MDg4NDQ4NTYsInN1YiI6ImFkbWlyYWx6aGFvbyJ9.PT5qFdrnfZItlDC9T0jyS3b40HeefCKcnM5xXXISfUA`
 
 describe("fandoms-endpoints", () => {
   db = knex({
@@ -62,6 +63,7 @@ describe("fandoms-endpoints", () => {
         const testFandom = 3
         return supertest(app)
         .delete(`/api/fandoms/${testFandom}`)
+        .set(`Authorization`, `Bearer ${wrongAuthToken}`)
         .expect(401)
     })
     it("PATCH /api/fandoms/:fandomId should return 200 with updated fandom if user is authorized", () => {
@@ -82,6 +84,15 @@ describe("fandoms-endpoints", () => {
         .set(`Authorization`, `Bearer ${authToken}`)
         .send(updatedFandom)
         .expect(400)
+    })
+    it("PATCH /api/fandoms/:fandomId should return 401 if the user is not authorized", () => {
+        const testFandom = 3
+        const updatedFandom = {wrongField: "This is not the right field!"}
+        return supertest(app)
+        .patch(`/api/fandoms/${testFandom}`)
+        .set(`Authorization`, `Bearer ${wrongAuthToken}`)
+        .send(updatedFandom)
+        .expect(401)
     })
   });
 });
