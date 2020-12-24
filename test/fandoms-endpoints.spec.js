@@ -73,7 +73,15 @@ describe("fandoms-endpoints", () => {
         .set(`Authorization`, `Bearer ${authToken}`)
         .send(updatedFandom)
         .expect(200, expected)
-
+    })
+    it("PATCH /api/fandoms/:fandomId should return 400 if required data is not present", () => {
+        const testFandom = 3
+        const updatedFandom = {wrongField: "This is not the right field!"}
+        return supertest(app)
+        .patch(`/api/fandoms/${testFandom}`)
+        .set(`Authorization`, `Bearer ${authToken}`)
+        .send(updatedFandom)
+        .expect(400)
     })
   });
 });
