@@ -121,6 +121,12 @@ describe("fandoms-endpoints", () => {
         .set(`Authorization`, `Bearer ${authToken}`)
         .send(fandomToInsert)
         .expect(400)
+  }), 
+  it("GET /api/fandoms/users/:userId should return 201 with an empty array if no data present", () => {
+    const userId = 1
+    return supertest(app)
+    .get(`/api/fandoms/users/${userId}`)
+    .expect(200, [])
   })
 })
 })
