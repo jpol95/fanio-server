@@ -154,6 +154,25 @@ describe("fandoms-endpoints", () => {
         .set(`Authorization`, `Bearer ${authToken}`)
         .expect(400);
       });
+      it("POST /fandoms sanitizes inputs that contain xss", () => {
+        const testUserId = 1
+        const xssFandom = {
+          title: 'Naughty naughty very naughty <script>alert("xss");</script>',
+        };
+        return supertest(app)
+          .post(`/api/fandoms/users/${testUserId}`)
+          .set("Authorization", `Bearer ${authToken}`)
+          .send(xssFandom)
+          .then((_) => {
+            return supertest(app)
+              .get("/api/fandoms/1")
+              .then((result) => {
+                expect(result.body.title).to.eql(
+                  'Naughty naughty very naughty &lt;script&gt;alert("xss");&lt;/script&gt;'
+                );
+              });
+          });
+      });
   });
 });
 
