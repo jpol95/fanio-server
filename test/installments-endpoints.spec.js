@@ -56,6 +56,13 @@ describe.only("fandoms-endpoints", () => {
             .expect(200, expected)
         })
     })
+    it("DELETE /api/installments/:installmentId should return 401 if user is unauthorized", () => {
+        const testInstallmentId = 4
+        return supertest(app)
+        .delete(`/api/installments/${testInstallmentId}`)
+        .set('Authorization', `Bearer ${wrongAuthToken}`)
+        .expect(401)
+    })
   })
 })
 
