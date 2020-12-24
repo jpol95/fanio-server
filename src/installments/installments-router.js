@@ -58,6 +58,7 @@ installmentsRouter.route("/:installmentId")
     const newInfo = {title, type}
     console.log(req.body)
     if (!title && !type) return res.status(400).json({error: 'Missing a required field(s)'})
+    if (type && !validTypes.includes(type)) return res.status(400).json({error: 'Invalid type'})
     InstallmentsService.updateInstallment(db, res.installment.id, newInfo)
     .then(installment => {
         return res.status(200).json(installment)

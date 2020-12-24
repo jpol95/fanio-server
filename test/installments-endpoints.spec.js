@@ -88,6 +88,15 @@ describe.only("fandoms-endpoints", () => {
         .send(editedInstallment)
         .expect(400)
     })
+    it("PATCH /api/installments/:installmentId should return 400 if type invalid", () => {
+        const testInstallmentId = 4
+        const editedInstallment = {title: "Buffy Comic Series Updated", type: "invalid type" }
+        return supertest(app)
+        .patch(`/api/installments/${testInstallmentId}`)
+        .set('Authorization', `Bearer ${authToken}`)
+        .send(editedInstallment)
+        .expect(400)
+    })
   })
 })
 
@@ -97,7 +106,7 @@ describe.only("fandoms-endpoints", () => {
 //delete installment 200, check
 //should return 401 if user unauthorized check
 //patch should return 200 if all required data present check
-//patch should return 400 if no required data present, 
+//patch should return 400 if no required data present check
 //patch should return 400 if invalid type submitted
 //patch should return 200 if some required data present
 //patch should return 401 if user is unauthorized
