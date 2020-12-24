@@ -112,7 +112,7 @@ describe("fandoms-endpoints", () => {
             .expect(200, expected)
         })
       })
-      it("POST /api/fandoms/users/:userId should return 201 if fields are provided and user is authorized", () => {
+      it("POST /api/fandoms/users/:userId should return 400 if required field is not provided", () => {
         const userId = 1
         const fandomId = 1
         const fandomToInsert = { wrongField: "It's not right" }; //should adding the userId be handled in the server? 
@@ -122,11 +122,26 @@ describe("fandoms-endpoints", () => {
         .send(fandomToInsert)
         .expect(400)
   }), 
+  it("POST /api/fandoms/users/:userId should return 401 if user is not authorized", () => {
+    const userId = 1
+    const fandomToInsert = {title: "I'm not an authorized user"}; //should adding the userId be handled in the server? 
+    return supertest(app)
+    .post(`/api/fandoms/users/${userId}`)
+    .set(`Authorization`, `Bearer ${wrongAuthToken}`)
+    .send(fandomToInsert)
+    .expect(401)
+}),
   it("GET /api/fandoms/users/:userId should return 201 with an empty array if no data present", () => {
     const userId = 1
     return supertest(app)
     .get(`/api/fandoms/users/${userId}`)
     .expect(200, [])
+  }), 
+  it("GET /api/fandoms/:fandomId should return 400 when no data present", () => {
+      const fandomId = 1
+      return supertest(app)
+      .get(`/api/fandoms/${fandomId}`)
+      .expect(400)
   })
 })
 })
