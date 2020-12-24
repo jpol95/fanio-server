@@ -64,7 +64,6 @@ async function checkFandomExists(req, res, next) {
     const db = req.app.get("db")
     const fandomId = req.params.fandomId;
     const fandom = await FandomsService.getFandomById(db, fandomId);
-
     if (!fandom) return res.status(400).json({ error: "Fandom not found" });
     res.fandom = fandom;
     next();
