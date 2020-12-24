@@ -402,6 +402,13 @@ const userList = [
     { tagId: 11, reviewId: 12 },
     { tagId: 12, reviewId: 3 },
   ];
+
+  const seedUsers = async (db) => {
+    return db.transaction(async trx => {
+      await trx("users").insert(userList)
+      trx.raw("select setval('users_id_seq', ?);", userList[userList.length - 1].id)
+    })
+  }
   
   const seedDataBase = async (db) => {
     return db.transaction(async trx =>{
@@ -413,13 +420,26 @@ const userList = [
     await trx("subs").insert(subList)
     await trx("tags").insert(tagList)
     await trx("review_tag_rels").insert(reviewTagList)
-    trx.raw("select setval('reviews_id_seq', ?);", reviewList[reviewList.length - 1].id)
-    trx.raw("select setval('users_id_seq', ?);", userList[userList.length - 1].id)
-    trx.raw("select setval('fandoms_id_seq', ?);", fandomList[fandomList.length - 1].id)
-    trx.raw("select setval('installments_id_seq', ?);", installmentList[installmentList.length - 1].id)
-    trx.raw("select setval('sections_id_seq', ?);", sectionList[sectionList.length - 1].id)
-    trx.raw("select setval('subs_id_seq', ?);", subList[subList.length - 1].id)
-    trx.raw("select setval('tags_id_seq', ?);", tagList[tagList.length - 1].id)
+    await trx.raw("select setval('reviews_id_seq', ?);", reviewList[reviewList.length - 1].id)
+    await trx.raw("select setval('users_id_seq', ?);", userList[userList.length - 1].id)
+    await trx.raw("select setval('fandoms_id_seq', ?);", fandomList[fandomList.length - 1].id)
+    await trx.raw("select setval('installments_id_seq', ?);", installmentList[installmentList.length - 1].id)
+    await trx.raw("select setval('sections_id_seq', ?);", sectionList[sectionList.length - 1].id)
+    await trx.raw("select setval('subs_id_seq', ?);", subList[subList.length - 1].id)
+    await trx.raw("select setval('tags_id_seq', ?);", tagList[tagList.length - 1].id)
+    })
+  }
+
+  const cleanUp = async (db) => {
+    return db.transaction(async trx =>{
+    await trx.raw("truncate users, fandoms, installments, sections, subs, reviews, tags, review_tag_rels;")
+    await trx.raw("alter sequence reviews_id_seq restart with 1;")
+    await trx.raw("alter sequence users_id_seq restart with 1;")
+    await trx.raw("alter sequence fandoms_id_seq restart with 1;")
+    await trx.raw("alter sequence installments_id_seq restart with 1;")
+    await trx.raw("alter sequence sections_id_seq restart with 1;")
+    await trx.raw("alter sequence subs_id_seq restart with 1;")
+    await trx.raw("alter sequence tags_id_seq restart with 1;")
     })
   }
   
@@ -431,6 +451,8 @@ const userList = [
     sectionList,  
     tagList,
     reviewTagList,
-    seedDataBase
+    seedDataBase, 
+    seedUsers, 
+    cleanUp
   };
   

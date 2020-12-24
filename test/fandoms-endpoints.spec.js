@@ -13,13 +13,11 @@ describe("fandoms-endpoints", () => {
     connection: process.env.TEST_DB_URL,
   });
   app.set("db", db);
-  before("delete fandoms before starting", () =>
-    db.raw("truncate fandoms, installments, sections, subs;")
-  );
+  before("delete fandoms before starting", () =>{
+    return testHelper.cleanUp(db)
+  });
   afterEach("clean up database after each test", () => {
-    return db.raw(
-      "truncate users, fandoms, installments, sections, subs, reviews, tags, review_tag_rels;"
-    );
+    return testHelper.cleanUp(db)
   });
   after("destroy database", () => db.destroy());
   context("fandoms table has data in it", () => {
@@ -95,6 +93,26 @@ describe("fandoms-endpoints", () => {
         .expect(401)
     })
   });
+  context('No data present', () => {
+      beforeEach("insert users", () => testHelper.seedUsers(db))
+      it("POST /api/fandoms/users/:userId should return 201 if fields are provided and user is authorized", () => {
+        const userId = 1
+        const fandomId = 1
+        const fandomToInsert = { title: "This is a new fandom" }; //should adding the userId be handled in the server? 
+        const expected = { id: 1, title: "This is a new fandom", userId: 1}
+        return supertest(app)
+        .post(`/api/fandoms/users/${userId}`)
+        .set(`Authorization`, `Bearer ${authToken}`)
+        .send(fandomToInsert)
+        .expect(201)
+        .then(fandom => {
+            console.log(fandom.body)
+            return supertest(app)
+            .get(`/api/fandoms/${fandomId}`)
+            .expect(200, expected)
+        })
+      })
+  })
 });
 
 //create db
