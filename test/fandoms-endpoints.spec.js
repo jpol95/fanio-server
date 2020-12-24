@@ -64,6 +64,17 @@ describe("fandoms-endpoints", () => {
         .delete(`/api/fandoms/${testFandom}`)
         .expect(401)
     })
+    it("PATCH /api/fandoms/:fandomId should return 200 with updated fandom if user is authorized", () => {
+        const testFandom = 3
+        const updatedFandom = {title: "This is an updated fandom"}
+        const expected = { id: 3, title: "This is an updated fandom", userId: 1 }
+        return supertest(app)
+        .set(`Authorization`, `Bearer ${authToken}`)
+        .patch(`/api/fandoms/${testFandom}`)
+        .send(updatedFandom)
+        .expect(200, expected)
+
+    })
   });
 });
 
