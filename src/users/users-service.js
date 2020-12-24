@@ -58,7 +58,11 @@ const UsersService = {
         .select("*")
         .where({ id })
         .first()
-        .then(user => UsersService.serializeUser(user))
+        .then(user => {
+          if (!!user)
+          return UsersService.serializeUser(user)
+          else return user
+        })
       },
     deleteUserById(db, id){
       return db("users")

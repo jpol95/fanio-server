@@ -3,13 +3,14 @@ const FandomsService = require("./fandoms-service");
 const jsonParser = express.json();
 const fandomsRouter = express.Router();
 const path = require('path')
+const {checkUserExists} = require('../users/users-router')
 const {requireLoggedInUser, requireAuth} = require("../middleware/jwt-auth")
 
 //this field will disappear once you introduce login
 
   fandomsRouter
   .route("/users/:userId")
-  .get((req, res, next) => {
+  .get(checkUserExists, (req, res, next) => {
     // console.log(req.params)
     const loggedInUser = req.params.userId
     const db = req.app.get("db");
@@ -19,7 +20,7 @@ const {requireLoggedInUser, requireAuth} = require("../middleware/jwt-auth")
       })
       .catch(next);
   })
-  .post(requireAuth, requireLoggedInUser,  jsonParser, (req, res, next) => {
+  .post(requireAuth, requireLoggedInUser, jsonParser, (req, res, next) => {
     const db = req.app.get("db");
     const { title } = req.body;
     // console.log(req.body)

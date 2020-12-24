@@ -24,6 +24,19 @@ describe("fandoms-endpoints", () => {
         .get(`/api/fandoms/${testId}`)
         .expect(200, result);
       });
+      it("GET /api/fandoms/users/:userId should return 200 with full fandomList", () => {
+            const testUser = 1
+            const expected = testHelper.fandomList.slice(0,5)
+            return supertest(app)
+            .get(`/api/fandoms/users/${testUser}`)
+            .expect(200, expected)
+      })
+      it("GET /api/fandoms/users/:userId should return 400 if requested user does not exist", () => {
+        const testUser = 5
+        return supertest(app)
+        .get(`/api/fandoms/users/${testUser}`)
+        .expect(400)
+  })
     });
   });
 
@@ -33,9 +46,6 @@ describe("fandoms-endpoints", () => {
 //before truncate db
 //aftereach truncate data
 //beforeeach insert data(in context of data present)
-//context data present --> get specific fandom(should
-//return 400 if fandom not there), get all fandoms(should
-//return empty array if empty), delete fandom(should
-//return 404 if fandom not there), patch fandom(should return 400 if fandom not there,
-//should return 400 if no required data present, should return 200 if some required data present)
-//if no data present --> post, get empty array if no data present, get should return 404
+//context data present --> get specific fandom, get all fandoms 200, should return 400 if user not there, delete fandom 200, patch should return 400 if no required data present, should return 200 if some required data present)
+//if no data present --> post should return 200 if required fields present, should return 400 if required field missing, get empty array if no data present, get, delete, and patch should return 400
+//don't forget to test for auth too !

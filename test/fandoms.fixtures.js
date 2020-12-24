@@ -2,12 +2,21 @@ const userList = [
     {
       id: 1,
       username: "kingbumii",
-      fullname: "Jesse B Pollack",
+      fullname: "Jesse A Pollack",
       password: "$2y$12$4R1JkopQ4LgjXH27bUAV5OwezOQLoBP6Yv7mbd.Nv7V67yBSmepZq",
       education: "Purple University",
       interests: ["skating", "softball", "listending to show tunes", "knitting"],
       city: "Gallifrey",
     },
+    {
+        id: 2,
+        username: "admiralzhaoo",
+        fullname: "Jesse B Pollack",
+        password: "$2y$12$ndoGk02hhe19W3z6ZPjOmONmLsmJuZV5yKR.7JikmrZAE6UagHxhu", //password 2
+        education: "Purple University",
+        interests: ["skating", "softball", "listending to show tunes", "knitting"],
+        city: "Gallifrey",
+      },
   ];
   
   const fandomList = [
@@ -16,6 +25,7 @@ const userList = [
     { id: 3, title: "Parks and Recreation", userId: 1 },
     { id: 4, title: "Buffy the Vampire Slayer", userId: 1 },
     { id: 5, title: "Harry Potter", userId: 1 },
+    { id: 6, title: "This belongs to user 2", userId: 2 },
   ];
   //when someone wants to add a fandom, have a dropdown menu or have them create a new one
   //join fandomList_user table

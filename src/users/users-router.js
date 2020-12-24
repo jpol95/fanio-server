@@ -66,6 +66,7 @@ const invalidPassword = (password) => {
        UsersService
       .getUserByUserId(db, req.params.userId)
       .then(user => {
+        console.log("is it getting here")
         if (!user) return res.status(400).json({error: 'User not found'})
         req.userUrl = user
         next()
@@ -97,7 +98,9 @@ const invalidPassword = (password) => {
       }).catch(next)
   })
 
-  module.exports = usersRouter
+  module.exports = {
+    usersRouter,
+    checkUserExists
 
-
+  }
   //finish deleting, try to finish patch by tomorrow

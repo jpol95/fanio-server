@@ -13,7 +13,7 @@ const reviewsRouter = require('./reviews/reviews-router')
 const tagsRouter = require('./tags/tags-router')
 const trelsRouter = require('./tags/trels-router')
 const authRouter = require('./auth/auth-router')
-const usersRouter = require('./users/users-router')
+const {usersRouter} = require('./users/users-router')
 
 const app = express();
 
