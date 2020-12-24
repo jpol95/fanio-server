@@ -34,12 +34,19 @@ describe.only("fandoms-endpoints", () => {
         .get(`/api/installments/${testInstallmentId}`)
         .expect(200, expected)
     })
+    it("GET /api/instalments/parent/:fandomId should return 200 with installment list", () => {
+        const testFandomId = 4
+        const expected = [{ id: 3, title: "Buffy TV Series", type: "Show", fandomId: 4 },
+        { id: 4, title: "Buffy Comic Series", type: "Comic series", fandomId: 4 }]
+        return supertest(app)
+        .get(`/api/installments/parent/${testFandomId}`)
+        .expect(200, expected)
+    })
   })
 })
 
 //context data present --> 
-// get specific installmen 200,
-//should return 400 if installment not there, 
+//get specific installment 200,
 //get all installments 200, 
 //get all installments 400 if parent fandom does not exist
 //delete installment 200, 
@@ -49,8 +56,9 @@ describe.only("fandoms-endpoints", () => {
 //patch should return 400 if no required data present, 
 //patch should return 200 if some required data present
 //patch should return 401 if user is unauthorized
-//if no data present --> 
 
+//if no data present --> 
+//get specific installment should return 400 if installment not there, 
 //post should return 200 if required fields present,
 //post should return 400 if installment type is invalid
 //post should return 400 if required field missing, 
