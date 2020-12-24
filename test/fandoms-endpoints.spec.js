@@ -57,7 +57,13 @@ describe("fandoms-endpoints", () => {
             .expect(expected)
         })
 
-    }) //this is the delete endpoint
+    })
+    it("DELETE /api/fandoms/:fandomId should return 401 if user is unauthorized", () => {
+        const testFandom = 3
+        return supertest(app)
+        .delete(`/api/fandoms/${testFandom}`)
+        .expect(401)
+    })
   });
 });
 
