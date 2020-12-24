@@ -112,8 +112,18 @@ describe("fandoms-endpoints", () => {
             .expect(200, expected)
         })
       })
+      it("POST /api/fandoms/users/:userId should return 201 if fields are provided and user is authorized", () => {
+        const userId = 1
+        const fandomId = 1
+        const fandomToInsert = { wrongField: "It's not right" }; //should adding the userId be handled in the server? 
+        return supertest(app)
+        .post(`/api/fandoms/users/${userId}`)
+        .set(`Authorization`, `Bearer ${authToken}`)
+        .send(fandomToInsert)
+        .expect(400)
   })
-});
+})
+})
 
 //create db
 //after destroy
@@ -122,4 +132,4 @@ describe("fandoms-endpoints", () => {
 //beforeeach insert data(in context of data present)
 //context data present --> get specific fandom, get all fandoms 200, should return 400 if user not there, delete fandom 200, patch should return 400 if no required data present, should return 200 if some required data present)
 //if no data present --> post should return 200 if required fields present, should return 400 if required field missing, get empty array if no data present, get, delete, and patch should return 400
-//don't forget to test for auth too !
+//don't forget to test for auth too, and to test for xss
