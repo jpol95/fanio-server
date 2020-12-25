@@ -426,6 +426,15 @@ const userList = [
     await trx.raw("select setval('installments_id_seq', ?);", installmentList[installmentList.length - 1].id)
     })
   }
+
+  const seedSections = async (db) => {
+    await seedInstallments(db)
+    db.transaction(async trx => {
+    await trx("sections").insert(sectionList)
+    await trx.raw("select setval('sections_id_seq', ?);", sectionList[sectionList.length - 1].id)
+    })
+  }
+  
   
   
   const seedDataBase = async (db) => {
@@ -473,6 +482,7 @@ const userList = [
     seedDataBase, 
     seedUsers, 
     seedFandoms,
+    seedSections,
     cleanUp, 
     seedInstallments
   };

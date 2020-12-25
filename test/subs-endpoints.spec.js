@@ -118,7 +118,7 @@ for (let field of requiredFields){
     const expected = {
         ...testHelper.subList[3], ...editedSub
         }
-    it.only("PATCH /api/sections/sub/:subId should return 200 and updated sub if at least one required field is provided", () => {
+    it("PATCH /api/sections/sub/:subId should return 200 and updated sub if at least one required field is provided", () => {
         const testSubId = 4
         return supertest(app)
         .patch(`/api/sections/sub/${testSubId}`)
@@ -148,11 +148,11 @@ it("PATCH /api/sections/sub/:subId should return 401 if user is not authorized",
 })
 })
 context("sections table contains no data", () => {
-    beforeEach("insert installments", () => testHelper.seedInstallments(db))
-    it("GET /api/sections/section/:sectionId should return 400 when no data is present", () => {
-        const testSectionId = 4
+    beforeEach("insert sections", () => testHelper.seedSections(db))
+    it.only("GET /api/sections/sub/:subId should return 400 when no data is present", () => {
+        const testSubId = 4
         return supertest(app)
-        .get(`/api/sections/section/${testSectionId}`)
+        .get(`/api/sections/sub/${testSubId}`)
         .expect(400)
     })
     it("GET /api/sections/section/parent/:installmentId should return 400 when no data is present", () => {
