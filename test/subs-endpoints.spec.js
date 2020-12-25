@@ -37,7 +37,7 @@ describe("subs-endpoints", () => {
         .get(`/api/sections/sub/parent/${testSectionId}`)
         .expect(200, expected)
     })
-    it.only("DELETE /api/sections/sub/:subId should return 204 and delete section in database", () => {
+    it("DELETE /api/sections/sub/:subId should return 204 and delete section in database", () => {
         const testSubId = 4
         const testSectionId = 16
         const expected = testHelper.subList.filter(
@@ -53,10 +53,10 @@ describe("subs-endpoints", () => {
             .expect(expected)
         })
     })
-    it("DELETE /api/sections/section/:sectionId should return 401 if user is unauthorized", () => {
-        const testSectionId = 4
+    it.only("DELETE /api/sections/sub/:subId should return 401 if user is unauthorized", () => {
+        const testSubId = 4
         return supertest(app)
-        .delete(`/api/sections/section/${testSectionId}`)
+        .delete(`/api/sections/sub/${testSubId}`)
         .set('Authorization', `Bearer ${wrongAuthToken}`)
         .expect(401)
     })
