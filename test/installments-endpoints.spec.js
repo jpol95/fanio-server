@@ -208,6 +208,13 @@ it("GET /api/installments/:installmentId should return 400 if no installments ar
     .get(`/api/installments/${testInstallmentId}`)
     .expect(400)
 })
+it("DELETE /api/installments/:installmentId should return 400 if no installments are present", () => {
+    const testInstallmentId = 4
+    return supertest(app)
+    .delete(`/api/installments/${testInstallmentId}`)
+    .set('Authorization', `Bearer ${authToken}`)
+    .expect(400)
+})
 })
 })
 
