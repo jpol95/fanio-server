@@ -208,6 +208,18 @@ for (let field of requiredFields){
         .expect(400)
     })
 }
+it("POST /api/sections/section/:sectionId should return 200 and inserted section", () => {
+    const testInstallmentId = 4
+    const sectionToInsert = [{
+            title: `This is updated`,
+            order: -5
+    }]
+    return supertest(app)
+    .post(`/api/sections/section/parent/${testInstallmentId}`)
+    .set('Authorization', `Bearer ${authToken}`)
+    .send(sectionToInsert)
+    .expect(400)
+})
 })
 })
 
@@ -228,8 +240,8 @@ for (let field of requiredFields){
 //get empty array if no data present check
 //delete should return 400 if section not found check
 //post should return 200 if required fields present check
-//post should return 400 if section order is invalid
-//post should return 400 if required field missing 
+//post should return 400 if section order is invalid check
+//post should return 400 if required field missing check
 //post should return 401 if user is unauthorized 
 //get, delete, and patch should return 400 
 //test for xss
