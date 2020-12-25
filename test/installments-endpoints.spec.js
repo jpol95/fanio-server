@@ -128,6 +128,15 @@ describe.only("fandoms-endpoints", () => {
     })
 
   })
+
+  context("no data is present", () => {
+  it("GET /api/installments/:installmentId should return 400 if no data is present", () => {
+        const testInstallmentId = 4
+        return supertest(app)
+        .get(`/api/installments/${testInstallmentId}`)
+        .expect(400)
+  })
+})
 })
 
 //context data present --> 
@@ -139,7 +148,7 @@ describe.only("fandoms-endpoints", () => {
 //patch should return 400 if no required data present check
 //patch should return 400 if invalid type submitted check
 //patch should return 200 if some required data present check
-//patch should return 401 if user is unauthorized
+//patch should return 401 if user is unauthorized check
 
 //if no data present --> 
 //get specific installment should return 400 if installment not there, 
