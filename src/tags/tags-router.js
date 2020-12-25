@@ -18,7 +18,7 @@ tagsRouter
       })
       .catch(next);
   })
-  .post(requireAuth, requireLoggedInUser, jsonParser, (req, res, next) => {
+  .post(jsonParser, (req, res, next) => {
     const db = req.app.get("db");
     const tags = req.body
     const tagArr = []
@@ -29,7 +29,7 @@ tagsRouter
     const singleTag = { title };
     tagArr.push(singleTag)
     }
-    FandomsService.insertTags(db, tagArr)
+    TagsService.insertTags(db, tagArr)
       .then((tag) => res.status(201).location(path.posix.join(req.originalUrl, `/${tag.id}`)).json(tag))
       .catch(next);
   });

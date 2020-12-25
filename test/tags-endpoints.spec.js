@@ -28,5 +28,19 @@ describe.only("auth-endpoints", () => {
           .get(`/api/tags`)
           .expect(testHelper.tagList)
       })
+      it("POST /api/tags/ should return 201 and created tag", () => {
+          const tag = [{
+              title: "testing", 
+          }]
+          return supertest(app)
+          .post(`/api/tags`)
+          .send(tag)
+          .expect(201)
+          .then(tag => {
+              return supertest(app)
+              .get(`/api/tags`)
+              .expect([...testHelper.tagList, ...tag.body])
+          })
+      })
   })
 })
