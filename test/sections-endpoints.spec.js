@@ -59,13 +59,19 @@ describe.only("fandoms-endpoints", () => {
             .expect(expected)
         })
     })
+    it("DELETE /api/sections/section/:sectionId", () => {
+        const testSectionId = 4
+        return supertest(app)
+        .delete(`/api/sections/section/${testSectionId}`)
+        .expect(401)
+    })
   })
 })
 
 //context data present --> 
 //get specific section 200, check
 //get all sections 200 check
-//delete section 200, 
+//delete section 200 check
 //delete section should return 401 if user unauthorized
 //patch should return 200 if all required data present 
 //patch should return 400 if no required data present 
