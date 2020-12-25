@@ -142,15 +142,17 @@ describe("fandoms-endpoints", () => {
       it("DELETE /api/fandoms/:fandomId should return 400 when no data present", () => {
         const fandomId = 1;
         return supertest(app)
-        .get(`/api/fandoms/${fandomId}`)
+        .delete(`/api/fandoms/${fandomId}`)
         .set(`Authorization`, `Bearer ${authToken}`)
         .expect(400);
       }),
       it("PATCH /api/fandoms/:fandomId should return 400 when no data present", () => {
         const fandomId = 1;
+        const updatedFandom = { title: "This is an updated fandom" };
         return supertest(app)
-        .get(`/api/fandoms/${fandomId}`)
+        .patch(`/api/fandoms/${fandomId}`)
         .set(`Authorization`, `Bearer ${authToken}`)
+        .send(updatedFandom)
         .expect(400);
       });
       it("POST /fandoms sanitizes inputs that contain xss", () => {

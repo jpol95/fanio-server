@@ -164,7 +164,7 @@ describe("fandoms-endpoints", () => {
         .send(newReview)
         .expect(400);
       });
-      it.only("POST /reviews sanitizes inputs that contain xss", () => {
+      it("POST /reviews sanitizes inputs that contain xss", () => {
         const xssFandom = {
           title: 'Naughty naughty very naughty <script>alert("xss");</script>',
           content: `Bad image <img src="https://url.to.file.which/does-not.exist" onerror="alert(document.cookie);">. But not <strong>all</strong> bad.`, 
