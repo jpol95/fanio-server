@@ -97,7 +97,6 @@ const UsersService = {
         return {
             ...user, 
             username: xss(user.username), 
-            name: xss(user.name), 
             interests: xss(user.interests), 
             city: xss(user.city), 
             education: xss(user.education),     

@@ -49,6 +49,7 @@ const invalidPassword = (password) => {
     }
     UsersService.updateUser(db, req.userUrl.id, newInfo)
     .then((user) => {
+      delete user.password
       return res.status(200).json(user)
     }).catch(next)
   })
