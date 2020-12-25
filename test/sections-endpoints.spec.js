@@ -63,7 +63,29 @@ describe.only("fandoms-endpoints", () => {
         const testSectionId = 4
         return supertest(app)
         .delete(`/api/sections/section/${testSectionId}`)
+        .set('Authorization', `Bearer ${wrongAuthToken}`)
         .expect(401)
+    })
+    it("PATCH /api/sections/section/:sectionId", () => {
+        const testSectionId = 4
+        const updatedSection = {
+                title: `This is updated`,
+                order: 10,
+                reviewId: 19
+        }
+        const expected = {
+            ...testHelper.sectionList[3], ...updatedSection
+        }
+        return supertest(app)
+        .patch(`/api/sections/section/${testSectionId}`)
+        .set('Authorization', `Bearer ${authToken}`)
+        .send(updatedSection)
+        .expect(200)
+        .then(() => {
+            return supertest(app)
+            .get(`/api/sections/section/${testSectionId}`)
+            .expect(expected)
+        })
     })
   })
 })
@@ -72,7 +94,7 @@ describe.only("fandoms-endpoints", () => {
 //get specific section 200, check
 //get all sections 200 check
 //delete section 200 check
-//delete section should return 401 if user unauthorized
+//delete section should return 401 if user unauthorized check
 //patch should return 200 if all required data present 
 //patch should return 400 if no required data present 
 //patch should return 400 if invalid type submitted 
