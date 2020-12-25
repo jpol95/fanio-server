@@ -421,8 +421,10 @@ const userList = [
 
   const seedInstallments = async (db) => {
     await seedFandoms(db)
+    db.transaction(async trx => {
     await trx("installments").insert(installmentList)
     await trx.raw("select setval('installments_id_seq', ?);", installmentList[installmentList.length - 1].id)
+    })
   }
   
   

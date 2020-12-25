@@ -154,12 +154,14 @@ it("PATCH /api/sections/section/:sectionId should return 401 if user is not auth
 })
 })
 context("sections table contains no data", () => {
+    beforeEach("insert installments", () => testHelper.seedInstallments(db))
     it("GET /api/sections/section/:sectionId should return 400 when no data is present", () => {
         const testSectionId = 4
         return supertest(app)
         .get(`/api/sections/section/${testSectionId}`)
         .expect(400)
     })
+    
 })
 })
 
@@ -168,6 +170,7 @@ context("sections table contains no data", () => {
 //get all sections 200 check
 //delete section 200 check
 //delete section should return 401 if user unauthorized check
+//get all sections 400 if parent installment does not exist
 //patch should return 200 if all required data present check 
 //patch should return 400 if no required data present check
 //patch should return 400 if invalid order submitted  check
@@ -175,13 +178,12 @@ context("sections table contains no data", () => {
 //patch should return 401 if user is unauthorized check
 
 //if no data present --> 
-//get specific section should return 400 if section not there
-//get all sections 400 if parent installment does not exist
+//get specific section should return 400 if section not there check
+//get empty array if no data present 
 //delete should return 400 if section not found 
 //post should return 200 if required fields present
 //post should return 400 if section order is invalid
 //post should return 400 if required field missing 
 //post should return 401 if user is unauthorized 
-//get empty array if no data present 
 //get, delete, and patch should return 400 
 //test for xss
