@@ -215,6 +215,15 @@ it("DELETE /api/installments/:installmentId should return 400 if no installments
     .set('Authorization', `Bearer ${authToken}`)
     .expect(400)
 })
+it("DELETE /api/installments/:installmentId should return 400 if no installments are present", () => {
+    const testInstallmentId = 4
+    const editedInstallment = {title: "Buffy Comic Series Updated", type: "Movie series" }   
+    return supertest(app)
+    .patch(`/api/installments/${testInstallmentId}`)
+    .set('Authorization', `Bearer ${authToken}`)
+    .send(editedInstallment)
+    .expect(400)
+})
 })
 })
 
