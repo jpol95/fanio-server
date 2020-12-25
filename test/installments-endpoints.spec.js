@@ -136,6 +136,12 @@ describe.only("fandoms-endpoints", () => {
         .get(`/api/installments/${testInstallmentId}`)
         .expect(400)
   })
+  it("GET /api/installments/parent/:fandom should return 400 if parent fandom does not exist", () => {
+      const testFandomId = 4
+      return supertest(app)
+      .get(`/api/installments/parent/${testFandomId}`)
+      .expect(400)
+  })
 })
 })
 
@@ -151,8 +157,8 @@ describe.only("fandoms-endpoints", () => {
 //patch should return 401 if user is unauthorized check
 
 //if no data present --> 
-//get specific installment should return 400 if installment not there, 
-//get all installments 400 if parent fandom does not exist
+//get specific installment should return 400 if installment not there check
+//get all installments 400 if parent fandom does not exist 
 //delete should return 400 if installment not found, 
 //post should return 200 if required fields present,
 //post should return 400 if installment type is invalid

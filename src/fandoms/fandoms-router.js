@@ -73,4 +73,7 @@ async function checkFandomExists(req, res, next) {
   }
 }
 
-module.exports = fandomsRouter
+module.exports = {
+  fandomsRouter, 
+  checkFandomExists
+}

@@ -3,6 +3,7 @@ const InstallmentsService = require("./installments-service");
 const jsonParser = express.json();
 const installmentsRouter = express.Router();
 const path = require('path')
+const {checkFandomExists} = require('../fandoms/fandoms-router')
 
 const {requireLoggedInUser, requireAuth} = require("../middleware/jwt-auth")
 
@@ -30,7 +31,7 @@ installmentsRouter
       .then((installments) => res.status(201).json(installments))
       .catch(next);
   })
-  .get((req, res, next) => {
+  .get(checkFandomExists, (req, res, next) => {
     const db = req.app.get("db");
     const fandomId = req.params.fandomId
     InstallmentsService.getInstallmentsByFandom(db, fandomId)
