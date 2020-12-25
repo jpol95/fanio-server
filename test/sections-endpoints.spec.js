@@ -191,7 +191,23 @@ context("sections table contains no data", () => {
             .expect(expected)
         })
     })
-    
+const requiredFields = ["title", "order"]
+for (let field of requiredFields){
+    const testInstallmentId = 4
+    const sectionToInsert = [{
+        title: `This is updated`,
+        order: 10
+    }]
+    delete sectionToInsert[0][field]
+    it("POST /api/sections/:sectionId should return 400 when a required field is missing", () => {
+        const testSectionId = 4
+        return supertest(app)
+        .post(`/api/sections/section/parent/${testInstallmentId}`)
+        .set('Authorization', `Bearer ${authToken}`)
+        .send(sectionToInsert)
+        .expect(400)
+    })
+}
 })
 })
 
@@ -211,7 +227,7 @@ context("sections table contains no data", () => {
 //get specific section should return 400 if section not there check
 //get empty array if no data present check
 //delete should return 400 if section not found check
-//post should return 200 if required fields present 
+//post should return 200 if required fields present check
 //post should return 400 if section order is invalid
 //post should return 400 if required field missing 
 //post should return 401 if user is unauthorized 
