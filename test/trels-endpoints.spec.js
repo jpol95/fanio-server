@@ -28,7 +28,7 @@ describe("trels-endpoints", () => {
           .get(`/api/trels`)
           .expect(testHelper.reviewTagList)
       })
-      it.only("POST /api/tags/ should return 201 and created tag", () => {
+      it("POST /api/tags/ should return 201 and created tag", () => {
           const reviewId = 20
           const trel = [{
               tagId: 5, 
@@ -44,11 +44,44 @@ describe("trels-endpoints", () => {
               .expect([...testHelper.reviewTagList, ...trel.body])
           })
       })
-      it("GET /api/tags/:tagId should return 200 and the created tag", () => {
-          const testTagId = 4
+      it("POST /api/tags/ should return 401 when user is unauthorized", () => {
+        const reviewId = 20
+        const trel = [{
+            tagId: 5, 
+        }]
         return supertest(app)
-        .get(`/api/tags/${testTagId}`)
-        .expect(testHelper.tagList[3])
+        .post(`/api/trels/${reviewId}`)
+        .set('Authorization', `Bearer ${wrongAuthToken}`)
+        .send(trel)
+        .expect(401)
     })
+      it("GET /api/trels/:tagId/:reviewId should return 200 and the created tag", () => {
+          const testTagId = 4
+          const reviewId = 12
+        return supertest(app)
+        .get(`/api/trels/${testTagId}/${reviewId}`)
+        .expect(200, testHelper.reviewTagList[3])
+    })
+    it.only("DELETE /api/trels/:reviewId should return 204 and delete all trels associated with specified review", () => {
+        const reviewId = 12
+        const expected = testHelper.reviewTagList.filter(trel => trel.reviewId !== reviewId)
+      return supertest(app)
+      .delete(`/api/trels/${reviewId}`)
+      .set('Authorization', `Bearer ${authToken}`)
+      .expect(204)
+      .then(() => {
+          return supertest(app)
+          .get(`/api/trels`)
+          .expect(expected)
+      })
+  })
+  it.only("DELETE /api/trels/:reviewId should return 401 if user is unauthorized", () => {
+    const reviewId = 12
+  return supertest(app)
+  .delete(`/api/trels/${reviewId}`)
+  .set('Authorization', `Bearer ${wrongAuthToken}`)
+  .expect(401)
+})
+  
   })
 })

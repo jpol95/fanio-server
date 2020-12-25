@@ -1,6 +1,5 @@
 const TrelsService = {
     getTrelById : (db, tagId, reviewId) => {
-        
         return db("review_tag_rels")
         .where({tagId, reviewId})
         .select('*')

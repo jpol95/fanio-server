@@ -20,6 +20,7 @@ trelsRouter
       .catch(next);
   })
 
+  //should you check that the trel exists?
 trelsRouter.route("/:tagId/:reviewId")
 .get((req, res, next) => {
   const db = req.app.get("db");
@@ -55,7 +56,7 @@ trelsRouter.route("/:reviewId")
     .then((trel) => res.status(201).json(trel))
     .catch(next);
 })
-.delete((req, res, next) => {
+.delete(requireAuth, requireLoggedInUser, (req, res, next) => {
   const db = req.app.get("db");
   const { reviewId } = req.params;
   TrelsService.getTrelsByReviewId(db, reviewId).then((trels) => {
