@@ -149,16 +149,16 @@ it("PATCH /api/sections/sub/:subId should return 401 if user is not authorized",
 })
 context("sections table contains no data", () => {
     beforeEach("insert sections", () => testHelper.seedSections(db))
-    it.only("GET /api/sections/sub/:subId should return 400 when no data is present", () => {
+    it("GET /api/sections/sub/:subId should return 400 when no data is present", () => {
         const testSubId = 4
         return supertest(app)
         .get(`/api/sections/sub/${testSubId}`)
         .expect(400)
     })
-    it("GET /api/sections/section/parent/:installmentId should return 400 when no data is present", () => {
-        const testInstallmentId = 4
+    it.only("GET /api/sections/section/parent/:installmentId should return 400 when no data is present", () => {
+        const testSectionId = 4
         return supertest(app)
-        .get(`/api/sections/section/parent/${testInstallmentId}`)
+        .get(`/api/sections/sub/parent/${testSectionId}`)
         .expect(200, [])
     })
     it("DELETE /api/sections/section/:sectionId should return 400 when no data is present", () => {
