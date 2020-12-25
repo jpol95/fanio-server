@@ -161,7 +161,12 @@ context("sections table contains no data", () => {
         .get(`/api/sections/section/${testSectionId}`)
         .expect(400)
     })
-    
+    it("GET /api/sections/section/parent/:installmentId should return 400 when no data is present", () => {
+        const testInstallmentId = 4
+        return supertest(app)
+        .get(`/api/sections/section/parent/${testInstallmentId}`)
+        .expect(200, [])
+    })
 })
 })
 
