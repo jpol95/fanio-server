@@ -94,7 +94,7 @@ describe("subs-endpoints", () => {
         .send(updatedSub)
         .expect(400)
   })
-  it.only("PATCH /api/sections/sub/:subId should return 400 if order is not valid", () => {
+  it("PATCH /api/sections/sub/:subId should return 400 if order is not valid", () => {
     const testSubId = 4
     const updatedSub = {
         title: `This is updated`,
@@ -118,7 +118,7 @@ for (let field of requiredFields){
     const expected = {
         ...testHelper.subList[3], ...editedSub
         }
-    it("PATCH /api/sections/sub/:subId should return 200 and updated sub if at least one required field is provided", () => {
+    it.only("PATCH /api/sections/sub/:subId should return 200 and updated sub if at least one required field is provided", () => {
         const testSubId = 4
         return supertest(app)
         .patch(`/api/sections/sub/${testSubId}`)
@@ -133,17 +133,17 @@ for (let field of requiredFields){
         })
     })
 }
-it("PATCH /api/sections/section/:sectionId should return 401 if user is not authorized", () => {
-    const testSectionId = 4
-    const updatedSection = {
+it("PATCH /api/sections/sub/:subId should return 401 if user is not authorized", () => {
+    const testSubId = 4
+    const updatedSub = {
         title: `This is updated`,
         order: 5,
         reviewId: 19
     }
     return supertest(app)
-    .patch(`/api/sections/section/${testSectionId}`)
+    .patch(`/api/sections/sub/${testSubId}`)
     .set('Authorization', `Bearer ${wrongAuthToken}`)
-    .send(updatedSection)
+    .send(updatedSub)
     .expect(401)
 })
 })
