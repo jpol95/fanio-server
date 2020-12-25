@@ -53,31 +53,31 @@ describe("subs-endpoints", () => {
             .expect(expected)
         })
     })
-    it.only("DELETE /api/sections/sub/:subId should return 401 if user is unauthorized", () => {
+    it("DELETE /api/sections/sub/:subId should return 401 if user is unauthorized", () => {
         const testSubId = 4
         return supertest(app)
         .delete(`/api/sections/sub/${testSubId}`)
         .set('Authorization', `Bearer ${wrongAuthToken}`)
         .expect(401)
     })
-    it("PATCH /api/sections/section/:sectionId should return 200 and updated section", () => {
-        const testSectionId = 4
-        const updatedSection = {
+    it.only("PATCH /api/sections/sub/:subId should return 200 and updated sub", () => {
+        const testSubId = 4
+        const updatedSub = {
                 title: `This is updated`,
                 order: 10,
                 reviewId: 19
         }
         const expected = {
-            ...testHelper.sectionList[3], ...updatedSection
+            ...testHelper.subList[3], ...updatedSub
         }
         return supertest(app)
-        .patch(`/api/sections/section/${testSectionId}`)
+        .patch(`/api/sections/sub/${testSubId}`)
         .set('Authorization', `Bearer ${authToken}`)
-        .send(updatedSection)
+        .send(updatedSub)
         .expect(200)
         .then(() => {
             return supertest(app)
-            .get(`/api/sections/section/${testSectionId}`)
+            .get(`/api/sections/sub/${testSubId}`)
             .expect(expected)
         })
     })
