@@ -164,6 +164,15 @@ it("POST /api/installments/parent/:fandomId should return 201 if required fields
         .expect(expected)
     })
 })
+it("POST /api/installments/parent/:fandomId should return 400 if installment type is invalid", () => {
+    const testFandomId = 4
+    const installmentToInsert = [{ title: "This is a new installment", type: "invalid type", fandomId: 4 }]
+    return supertest(app)
+    .post(`/api/installments/parent/${testFandomId}`)
+    .set('Authorization', `Bearer ${authToken}`)
+    .send(installmentToInsert)
+    .expect(400)
+})
 })
 })
 
@@ -182,7 +191,7 @@ it("POST /api/installments/parent/:fandomId should return 201 if required fields
 //get specific installment should return 400 if installment not there check
 //get all installments 400 if parent fandom does not exist check
 //delete should return 400 if installment not found check 
-//post should return 200 if required fields present,
+//post should return 200 if required fields present check
 //post should return 400 if installment type is invalid
 //post should return 400 if required field missing, 
 //post should return 401 if user is unauthorized
