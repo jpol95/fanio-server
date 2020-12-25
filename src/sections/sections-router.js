@@ -3,12 +3,12 @@ const SectionsService = require("./sections-service");
 const jsonParser = express.json();
 const sectionsRouter = express.Router();
 const { json } = require("express");
-const {requireLoggedInUser, requireAuth} = require("../middleware/jwt-auth")
+const { requireLoggedInUser, requireAuth } = require("../middleware/jwt-auth");
 
 const loggedInUser = 1; //this field will disappear once you introduce login
 
 const setType = (req, res, next) => {
-  const urlArray = req.originalUrl.split("/")
+  const urlArray = req.originalUrl.split("/");
   const db = req.app.get("db");
   if (urlArray.includes("sub")) {
     res.tableName = "subs";
@@ -26,18 +26,19 @@ sectionsRouter
   .post(requireAuth, requireLoggedInUser, jsonParser, (req, res, next) => {
     const db = req.app.get("db");
     const parentId = req.params[`${res.parent}Id`];
-    const sections = []
-    for(section of req.body){
-    const { title, order } = section;
-    if (!title)
-      return res.status(400).json({ error: "Must provide title for section" });
-    if (!order || !Number.isInteger(Number(order)) || order < 0)
-      return (
-        res.status(400).
-        json({ error: "Order is required and must be an integer above 0" })
-      );
-    const sectionEl = { title, order, [`${res.parent}Id`]: parentId };
-    sections.push(sectionEl)
+    const sections = [];
+    for (section of req.body) {
+      const { title, order } = section;
+      if (!title)
+        return res
+          .status(400)
+          .json({ error: "Must provide title for section" });
+      if (!order || !Number.isInteger(Number(order)) || order < 0)
+        return res
+          .status(400)
+          .json({ error: "Order is required and must be an integer above 0" });
+      const sectionEl = { title, order, [`${res.parent}Id`]: parentId };
+      sections.push(sectionEl);
     }
     SectionsService.insertSections(db, sections, res.tableName)
       .then((sections) => res.status(201).json(sections))
@@ -57,13 +58,10 @@ sectionsRouter
         return res.status(200).json(sections);
       })
       .catch(next);
-  })
+  });
 
 sectionsRouter
-  .route([
-    "/section/:sectionId",
-    "/sub/:subId",
-  ])
+  .route(["/section/:sectionId", "/sub/:subId"])
   .all(setType)
   .all(checkSectionExists)
   .delete(requireAuth, requireLoggedInUser, (req, res, next) => {
@@ -82,6 +80,11 @@ sectionsRouter
     const newInfo = { title, order, reviewId };
     if (!title && !order && !reviewId)
       return res.status(400).json({ error: "Missing a required field(s)" });
+
+    if (!order || !Number.isInteger(Number(order)) || order < 0)
+      return res
+        .status(400)
+        .json({ error: "Order is required and must be an integer above 0" });
     SectionsService.updateSection(db, res.section.id, newInfo, res.tableName)
       .then((section) => {
         return res.status(200).json(section);
@@ -90,7 +93,7 @@ sectionsRouter
   })
   .get((req, res, next) => {
     return res.status(200).json(res.section);
-  })
+  });
 
 //check if you should be returning the thing you're updating
 
