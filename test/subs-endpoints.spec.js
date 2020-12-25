@@ -109,26 +109,26 @@ describe("subs-endpoints", () => {
 })
 const requiredFields = ["title", "order", "reviewId"]
 for (let field of requiredFields){
-    const editedSection = {
+    const editedSub = {
         title: `This is updated`,
         order: 10,
         reviewId: 19
     }
-    delete editedSection[field]
+    delete editedSub[field]
     const expected = {
-        ...testHelper.sectionList[3], ...editedSection
+        ...testHelper.subList[3], ...editedSub
         }
-    it("PATCH /api/sections/:sectionId should return 200 and updated section if at least one required field is provided", () => {
-        const testSectionId = 4
+    it("PATCH /api/sections/sub/:subId should return 200 and updated sub if at least one required field is provided", () => {
+        const testSubId = 4
         return supertest(app)
-        .patch(`/api/sections/section/${testSectionId}`)
+        .patch(`/api/sections/sub/${testSubId}`)
         .set('Authorization', `Bearer ${authToken}`)
-        .send(editedSection)
+        .send(editedSub)
         .expect(200)
         .then((result) => {
             
             return supertest(app)
-            .get(`/api/sections/section/${testSectionId}`)
+            .get(`/api/sections/sub/${testSubId}`)
             .expect(expected)       
         })
     })
