@@ -232,6 +232,19 @@ it("POST /api/sections/section/:sectionId should return 200 and inserted section
     .send(sectionToInsert)
     .expect(401)
 })
+it("PATCH /api/sections/section/:sectionId should return 400 when no data is present", () => {
+    const testSectionId = 4
+    const updatedSection = {
+        title: `This is updated`,
+        order: 5,
+        reviewId: 19
+    }
+    return supertest(app)
+    .delete(`/api/sections/section/${testSectionId}`)
+    .set('Authorization', `Bearer ${authToken}`)
+    .send(updatedSection)
+    .expect(400)
+})
 })
 })
 
@@ -248,12 +261,10 @@ it("POST /api/sections/section/:sectionId should return 200 and inserted section
 //patch should return 401 if user is unauthorized check
 
 //if no data present --> 
-//get specific section should return 400 if section not there check
-//get empty array if no data present check
-//delete should return 400 if section not found check
 //post should return 200 if required fields present check
 //post should return 400 if section order is invalid check
 //post should return 400 if required field missing check
-//post should return 401 if user is unauthorized <--YOU ARE HERE!!!!!!
-//get, delete, and patch should return 400 
+//post should return 401 if user is unauthorized check
+//get empty array if no data present check
+//get(specific), delete, and patch should return 400 
 //test for xss

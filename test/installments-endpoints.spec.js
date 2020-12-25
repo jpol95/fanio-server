@@ -195,25 +195,12 @@ it("POST /api/installments/parent/:fandomId should return 401 if user is unautho
     .send(installmentToInsert)
     .expect(401)
 })
-it("GET /api/installments/parent/:fandonId should return 200 and an empty array", () => {
+it("GET /api/installments/parent/:fandomId should return 200 and an empty array", () => {
     const testFandomId = 4
     return supertest(app)
     .get(`/api/installments/parent/${testFandomId}`)
     .set('Authorization', `Bearer ${authToken}`)
     .expect(200, [])
-})
-it("GET /api/installments/:installmentId should return 400 if no installments are present", () => {
-    const testInstallmentId = 4
-    return supertest(app)
-    .get(`/api/installments/${testInstallmentId}`)
-    .expect(400)
-})
-it("DELETE /api/installments/:installmentId should return 400 if no installments are present", () => {
-    const testInstallmentId = 4
-    return supertest(app)
-    .delete(`/api/installments/${testInstallmentId}`)
-    .set('Authorization', `Bearer ${authToken}`)
-    .expect(400)
 })
 it("PATCH /api/installments/:installmentId should return 400 if no installments are present", () => {
     const testInstallmentId = 4
