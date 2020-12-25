@@ -167,6 +167,12 @@ context("sections table contains no data", () => {
         .get(`/api/sections/section/parent/${testInstallmentId}`)
         .expect(200, [])
     })
+    it("DELETE /api/sections/section/:sectionId should return 400 when no data is present", () => {
+        const testSectionId = 4
+        return supertest(app)
+        .delete(`/api/sections/section/${testSectionId}`)
+        .expect(400)
+    })
 })
 })
 
@@ -184,7 +190,7 @@ context("sections table contains no data", () => {
 
 //if no data present --> 
 //get specific section should return 400 if section not there check
-//get empty array if no data present 
+//get empty array if no data present check
 //delete should return 400 if section not found 
 //post should return 200 if required fields present
 //post should return 400 if section order is invalid
