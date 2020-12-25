@@ -202,6 +202,12 @@ it("GET /api/installments/parent/:fandonId should return 200 and an empty array"
     .set('Authorization', `Bearer ${authToken}`)
     .expect(200, [])
 })
+it("GET /api/installments/:installmentId should return 400 if no installments are present", () => {
+    const testInstallmentId = 4
+    return supertest(app)
+    .get(`/api/installments/${testInstallmentId}`)
+    .expect(400)
+})
 })
 })
 
@@ -224,6 +230,6 @@ it("GET /api/installments/parent/:fandonId should return 200 and an empty array"
 //post should return 400 if installment type is invalid check
 //post should return 400 if required field missing check
 //post should return 401 if user is unauthorized check
-//get empty array if no data present,
-//get, delete, and patch should return 400
+//get empty array if no data present check
+//get, delete, and patch should return 400 
 //don't forget to test for auth too, and to test for xss
