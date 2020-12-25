@@ -22,7 +22,7 @@ describe("subs-endpoints", () => {
   after("destroy database", () => db.destroy());
   context("subs table has data in it", () => {
     beforeEach("insert subs into db", () => testHelper.seedDataBase(db));
-    it.only("GET /api/sections/sub/:subId should return 200 and specific section", () => {
+    it("GET /api/sections/sub/:subId should return 200 and specific section", () => {
         const testSubId = 4
         const expected =  { id: 4, title: "Supernatural s3e4", order: 4, reviewId: 4, sectionId: 16 }
         return supertest(app)
@@ -30,11 +30,11 @@ describe("subs-endpoints", () => {
         .expect(200, expected)
 
     })
-    it("GET /api/sections/section/parent/:installmentId should return 200 and delete specified section", () => {
-        const testInstallmentId = 4
-        const expected = testHelper.sectionList.filter(section => section.installmentId === testInstallmentId)
+    it.only("GET /api/sections/section/parent/:installmentId should return 200 and delete specified section", () => {
+        const testSectionId = 11
+        const expected = testHelper.subList.filter(sub => sub.sectionId === testSectionId)
         return supertest(app)
-        .get(`/api/sections/section/parent/${testInstallmentId}`)
+        .get(`/api/sections/sub/parent/${testSectionId}`)
         .expect(200, expected)
     })
     it("DELETE /api/sections/section/:sectionId should return 204 and delete section in database", () => {

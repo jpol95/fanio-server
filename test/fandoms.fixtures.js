@@ -469,6 +469,7 @@ const userList = [
     sectionList,  
     tagList,
     reviewTagList,
+    subList,
     seedDataBase, 
     seedUsers, 
     seedFandoms,
