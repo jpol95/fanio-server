@@ -195,6 +195,13 @@ it("POST /api/installments/parent/:fandomId should return 401 if user is unautho
     .send(installmentToInsert)
     .expect(401)
 })
+it("GET /api/installments/parent/:fandonId should return 200 and an empty array", () => {
+    const testFandomId = 4
+    return supertest(app)
+    .get(`/api/installments/parent/${testFandomId}`)
+    .set('Authorization', `Bearer ${authToken}`)
+    .expect(200, [])
+})
 })
 })
 
@@ -216,7 +223,7 @@ it("POST /api/installments/parent/:fandomId should return 401 if user is unautho
 //post should return 200 if required fields present check
 //post should return 400 if installment type is invalid check
 //post should return 400 if required field missing check
-//post should return 401 if user is unauthorized
+//post should return 401 if user is unauthorized check
 //get empty array if no data present,
 //get, delete, and patch should return 400
 //don't forget to test for auth too, and to test for xss
