@@ -173,6 +173,19 @@ it("POST /api/installments/parent/:fandomId should return 400 if installment typ
     .send(installmentToInsert)
     .expect(400)
 })
+const requiredFields = ["title", "type"]
+const testFandomId = 4
+for (let field of requiredFields){
+    const newInstallment = [{title: "new comic", type: "Comic series", fandomId: 4 }]
+    delete newInstallment[0][field]
+    it("POST /api/installments/:installmentId should return 400 if a required field is missing", () => {
+        return supertest(app)
+        .post(`/api/installments/parent/${testFandomId}`)
+        .set('Authorization', `Bearer ${authToken}`)
+        .send(newInstallment)
+        .expect(400)
+    })
+}
 })
 })
 
@@ -192,7 +205,7 @@ it("POST /api/installments/parent/:fandomId should return 400 if installment typ
 //get all installments 400 if parent fandom does not exist check
 //delete should return 400 if installment not found check 
 //post should return 200 if required fields present check
-//post should return 400 if installment type is invalid
+//post should return 400 if installment type is invalid check
 //post should return 400 if required field missing, 
 //post should return 401 if user is unauthorized
 //get empty array if no data present,
