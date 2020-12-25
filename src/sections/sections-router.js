@@ -81,7 +81,7 @@ sectionsRouter
     if (!title && !order && !reviewId)
       return res.status(400).json({ error: "Missing a required field(s)" });
 
-    if (!order || !Number.isInteger(Number(order)) || order < 0)
+    if (!!order && (!Number.isInteger(Number(order)) || order < 0))
       return res
         .status(400)
         .json({ error: "Order is required and must be an integer above 0" });

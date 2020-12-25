@@ -22,7 +22,7 @@ describe.only("fandoms-endpoints", () => {
   after("destroy database", () => db.destroy());
   context("sections table has data in it", () => {
     beforeEach("insert installments into db", () => testHelper.seedDataBase(db));
-    it("GET /api/sections/section/:sectionId", () => {
+    it("GET /api/sections/section/:sectionId should return 200", () => {
         const testSectionId = 4
         const expected =  {
             id: 4,
@@ -36,7 +36,7 @@ describe.only("fandoms-endpoints", () => {
         .expect(200, expected)
 
     })
-    it("GET /api/sections/section/parent/:installmentId", () => {
+    it("GET /api/sections/section/parent/:installmentId should return 200", () => {
         const testInstallmentId = 4
         const expected = testHelper.sectionList.filter(section => section.installmentId === testInstallmentId)
         return supertest(app)
@@ -59,14 +59,14 @@ describe.only("fandoms-endpoints", () => {
             .expect(expected)
         })
     })
-    it("DELETE /api/sections/section/:sectionId", () => {
+    it("DELETE /api/sections/section/:sectionId should return 401 if user is unauthorized", () => {
         const testSectionId = 4
         return supertest(app)
         .delete(`/api/sections/section/${testSectionId}`)
         .set('Authorization', `Bearer ${wrongAuthToken}`)
         .expect(401)
     })
-    it("PATCH /api/sections/section/:sectionId", () => {
+    it("PATCH /api/sections/section/:sectionId should return 200", () => {
         const testSectionId = 4
         const updatedSection = {
                 title: `This is updated`,
@@ -87,7 +87,7 @@ describe.only("fandoms-endpoints", () => {
             .expect(expected)
         })
     })
-    it("PATCH /api/sections/section/:sectionId", () => {
+    it("PATCH /api/sections/section/:sectionId should return 400 if no required sections are provided", () => {
         const testSectionId = 4
         const updatedSection = {
                 wrongSection1: `This is updated`,
@@ -100,7 +100,7 @@ describe.only("fandoms-endpoints", () => {
         .send(updatedSection)
         .expect(400)
   })
-  it("PATCH /api/sections/section/:sectionId", () => {
+  it("PATCH /api/sections/section/:sectionId should return 400 if order is not valid", () => {
     const testSectionId = 4
     const updatedSection = {
         title: `This is updated`,
@@ -113,6 +113,34 @@ describe.only("fandoms-endpoints", () => {
     .send(updatedSection)
     .expect(400)
 })
+const requiredFields = ["title", "order", "reviewId"]
+//YOU ARE HERE
+for (let field of requiredFields){
+    const editedSection = {
+        title: `This is updated`,
+        order: 10,
+        reviewId: 19
+    }
+    delete editedSection[field]
+    const expected = {
+        ...testHelper.sectionList[3], ...editedSection
+        }
+    it("PATCH /api/sections/:sectionId should return 200 and updated section if at least one required field is provided", () => {
+        const testSectionId = 4
+        return supertest(app)
+        .patch(`/api/sections/section/${testSectionId}`)
+        .set('Authorization', `Bearer ${authToken}`)
+        .send(editedSection)
+        .expect(200)
+        .then((result) => {
+            
+            return supertest(app)
+            .get(`/api/sections/section/${testSectionId}`)
+            .expect(expected)       
+        })
+    })
+}
+
 })
 })
 
@@ -123,7 +151,7 @@ describe.only("fandoms-endpoints", () => {
 //delete section should return 401 if user unauthorized check
 //patch should return 200 if all required data present check 
 //patch should return 400 if no required data present check
-//patch should return 400 if invalid type submitted 
+//patch should return 400 if invalid order submitted  check
 //patch should return 200 if some required data present
 //patch should return 401 if user is unauthorized 
 
