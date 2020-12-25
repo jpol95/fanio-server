@@ -406,7 +406,7 @@ const userList = [
   const seedUsers = async (db) => {
     return db.transaction(async trx => {
       await trx("users").insert(userList)
-      trx.raw("select setval('users_id_seq', ?);", userList[userList.length - 1].id)
+      await trx.raw("select setval('users_id_seq', ?);", userList[userList.length - 1].id)
     })
   }
   
@@ -414,10 +414,17 @@ const userList = [
     return db.transaction(async trx => {
       await trx("users").insert(userList)
       await trx("fandoms").insert(fandomList)
-      trx.raw("select setval('users_id_seq', ?);", userList[userList.length - 1].id)
-      trx.raw("select setval('fandoms_id_seq', ?);", fandomList[fandomList.length - 1].id)
+      await trx.raw("select setval('users_id_seq', ?);", userList[userList.length - 1].id)
+      await trx.raw("select setval('fandoms_id_seq', ?);", fandomList[fandomList.length - 1].id)
     })
   }
+
+  const seedInstallments = async (db) => {
+    await seedFandoms(db)
+    await trx("installments").insert(installmentList)
+    await trx.raw("select setval('installments_id_seq', ?);", installmentList[installmentList.length - 1].id)
+  }
+  
   
   const seedDataBase = async (db) => {
     return db.transaction(async trx =>{
@@ -463,6 +470,7 @@ const userList = [
     seedDataBase, 
     seedUsers, 
     seedFandoms,
-    cleanUp
+    cleanUp, 
+    seedInstallments
   };
   
