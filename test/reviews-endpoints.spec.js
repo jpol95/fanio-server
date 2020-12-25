@@ -79,7 +79,7 @@ describe("fandoms-endpoints", () => {
         .send(updatedReview)
         .expect(200, expected);
     });
-    it.only("PATCH /api/reviews/:reviewId should return 400 if required data is not present", () => {
+    it("PATCH /api/reviews/:reviewId should return 400 if required data is not present", () => {
       const testReview = 9;
       const updatedReview = { wrongField: "This is not the right field!" };
       return supertest(app)
@@ -88,77 +88,80 @@ describe("fandoms-endpoints", () => {
         .send(updatedReview)
         .expect(400);
     });
-    it("PATCH /api/fandoms/:fandomId should return 401 if the user is not authorized", () => {
-      const testFandom = 3;
-      const updatedFandom = { wrongField: "This is not the right field!" };
+    it("PATCH /api/reviews/:reviewId should return 401 if the user is not authorized", () => {
+        const testReview = 9;
+         const updatedReview = {
+        title: `Doctor Who Updated`,
+        content: `Omg this is the worst episode! I am updating!`,
+        rating: 5,
+      }
       return supertest(app)
-        .patch(`/api/fandoms/${testFandom}`)
+        .patch(`/api/reviews/${testReview}`)
         .set(`Authorization`, `Bearer ${wrongAuthToken}`)
-        .send(updatedFandom)
+        .send(updatedReview)
         .expect(401);
     });
   });
   context("No data present", () => {
-    beforeEach("insert users", () => testHelper.seedUsers(db));
-    it("POST /api/fandoms/users/:userId should return 201 if fields are provided and user is authorized", () => {
-      const userId = 1;
-      const fandomId = 1;
-      const fandomToInsert = { title: "This is a new fandom" }; //should adding the userId be handled in the server?
-      const expected = { id: 1, title: "This is a new fandom", userId: 1 };
+    // beforeEach("insert users", () => testHelper.seedReviews(db));
+    it("POST /api/reviews should return 201 if fields are provided and user is authorized", () => {
+        const reviewToInsert = {
+            title: `New Review`,
+            content: `Omg this is the worst episode ever!`,
+            rating: 2,
+          } //should adding the userId be handled in the server?
+      const expected = { ...reviewToInsert, id: 1 };
       return supertest(app)
-        .post(`/api/fandoms/users/${userId}`)
+        .post(`/api/reviews`)
         .set(`Authorization`, `Bearer ${authToken}`)
-        .send(fandomToInsert)
+        .send(reviewToInsert)
         .expect(201)
         .then((fandom) => {
           return supertest(app)
-            .get(`/api/fandoms/${fandomId}`)
+            .get(`/api/reviews/1`)
             .expect(200, expected);
         });
     });
-    it("POST /api/fandoms/users/:userId should return 400 if required field is not provided", () => {
-      const userId = 1;
-      const fandomId = 1;
-      const fandomToInsert = { wrongField: "It's not right" }; //should adding the userId be handled in the server?
-      return supertest(app)
-        .post(`/api/fandoms/users/${userId}`)
-        .set(`Authorization`, `Bearer ${authToken}`)
-        .send(fandomToInsert)
-        .expect(400);
-    }),
-      it("POST /api/fandoms/users/:userId should return 401 if user is not authorized", () => {
-        const userId = 1;
-        const fandomToInsert = { title: "I'm not an authorized user" }; //should adding the userId be handled in the server?
+    const requiredFields = ["title", "content", "rating"]
+    for (let field of requiredFields){
+    const newReview = {
+        title: `New review season 3 Review`,
+        content: `New Reviewv!`,
+        rating: 6,
+      }
+    delete newReview[field]
+    it("POST /api/reviews/:reviewId should return 400 if a required field is missing", () => {
         return supertest(app)
-          .post(`/api/fandoms/users/${userId}`)
-          .set(`Authorization`, `Bearer ${wrongAuthToken}`)
-          .send(fandomToInsert)
-          .expect(401);
-      }),
-      it("GET /api/fandoms/users/:userId should return 201 with an empty array if no data present", () => {
-        const userId = 1;
+        .post(`/api/reviews`)
+        .set('Authorization', `Bearer ${authToken}`)
+        .send(newReview)
+        .expect(400)
+    })
+}
+      it("GET /api/reviews/:reviewId should return 400 when no data present", () => {
+        const testReviewId = 9;
         return supertest(app)
-          .get(`/api/fandoms/users/${userId}`)
-          .expect(200, []);
-      }),
-      it("GET /api/fandoms/:fandomId should return 400 when no data present", () => {
-        const fandomId = 1;
-        return supertest(app)
-        .get(`/api/fandoms/${fandomId}`)
+        .get(`/api/fandoms/${testReviewId}`)
         .expect(400);
       }),
-      it("DELETE /api/fandoms/:fandomId should return 400 when no data present", () => {
-        const fandomId = 1;
+      it("DELETE /api/reviews/:reviewId should return 400 when no data present", () => {
+        const testReviewId = 9
         return supertest(app)
-        .get(`/api/fandoms/${fandomId}`)
+        .delete(`/api/reviews/${testReviewId}`)
         .set(`Authorization`, `Bearer ${authToken}`)
         .expect(400);
       }),
-      it("PATCH /api/fandoms/:fandomId should return 400 when no data present", () => {
-        const fandomId = 1;
+      it.only("PATCH /api/reviews/:reviewId should return 400 when no data present", () => {
+        const testReviewId = 9
+        const newReview = {
+            title: `New review season 3 Review`,
+            content: `New Reviewv!`,
+            rating: 3,
+          }
         return supertest(app)
-        .get(`/api/fandoms/${fandomId}`)
+        .patch(`/api/reviews/${testReviewId}`)
         .set(`Authorization`, `Bearer ${authToken}`)
+        .send(newReview)
         .expect(400);
       });
       it("POST /fandoms sanitizes inputs that contain xss", () => {
@@ -194,3 +197,6 @@ describe("fandoms-endpoints", () => {
 //get empty array if no data present check
 //get, delete, and patch should return 400 check
 //test for xss
+
+
+//REMEBER TO USE LOOP FOR PATCH

@@ -490,6 +490,7 @@ const userList = [
     seedUsers, 
     seedFandoms,
     seedSections,
+    seedReviews,
     cleanUp, 
     seedInstallments
   };
