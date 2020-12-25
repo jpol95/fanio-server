@@ -151,7 +151,7 @@ describe("fandoms-endpoints", () => {
         .set(`Authorization`, `Bearer ${authToken}`)
         .expect(400);
       }),
-      it.only("PATCH /api/reviews/:reviewId should return 400 when no data present", () => {
+      it("PATCH /api/reviews/:reviewId should return 400 when no data present", () => {
         const testReviewId = 9
         const newReview = {
             title: `New review season 3 Review`,
@@ -164,23 +164,26 @@ describe("fandoms-endpoints", () => {
         .send(newReview)
         .expect(400);
       });
-      it("POST /fandoms sanitizes inputs that contain xss", () => {
-        const testUserId = 1
+      it.only("POST /reviews sanitizes inputs that contain xss", () => {
         const xssFandom = {
           title: 'Naughty naughty very naughty <script>alert("xss");</script>',
+          content: `Bad image <img src="https://url.to.file.which/does-not.exist" onerror="alert(document.cookie);">. But not <strong>all</strong> bad.`, 
+          rating: 4
         };
         return supertest(app)
-          .post(`/api/fandoms/users/${testUserId}`)
+          .post(`/api/reviews`)
           .set("Authorization", `Bearer ${authToken}`)
           .send(xssFandom)
           .then((_) => {
             return supertest(app)
-              .get("/api/fandoms/1")
+              .get("/api/reviews/1")
               .then((result) => {
                 expect(result.body.title).to.eql(
                   'Naughty naughty very naughty &lt;script&gt;alert("xss");&lt;/script&gt;'
                 );
-              });
+                expect(result.body.content).to.eql(
+                    `Bad image <img src="https://url.to.file.which/does-not.exist">. But not <strong>all</strong> bad.`
+              )});
           });
       });
   });
