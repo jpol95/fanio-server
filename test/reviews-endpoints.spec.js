@@ -53,30 +53,39 @@ describe("fandoms-endpoints", () => {
         .set(`Authorization`, `Bearer ${authToken}`)
         .expect(204)
     });
-    it.only("DELETE /api/reviews/:reviewId should return 401 if user is unauthorized", () => {
+    it("DELETE /api/reviews/:reviewId should return 401 if user is unauthorized", () => {
       const testReviewId = 9;
       return supertest(app)
         .delete(`/api/reviews/${testReviewId}`)
         .set(`Authorization`, `Bearer ${wrongAuthToken}`)
         .expect(401);
     });
-    it("PATCH /api/fandoms/:fandomId should return 200 with updated fandom if user is authorized", () => {
-      const testFandom = 3;
-      const updatedFandom = { title: "This is an updated fandom" };
-      const expected = { id: 3, title: "This is an updated fandom", userId: 1 };
+    it("PATCH /api/reviews/:reviewId should return 200 with updated fandom if user is authorized", () => {
+      const testReview = 9;
+      const updatedReview = {
+        title: `Doctor Who Updated`,
+        content: `Omg this is the worst episode! I am updating!`,
+        rating: 5,
+      }
+      const expected = {
+        id: 9,
+        title: `Doctor Who Updated`,
+        content: `Omg this is the worst episode! I am updating!`,
+        rating: 5,
+      };
       return supertest(app)
-        .patch(`/api/fandoms/${testFandom}`)
+        .patch(`/api/reviews/${testReview}`)
         .set(`Authorization`, `Bearer ${authToken}`)
-        .send(updatedFandom)
+        .send(updatedReview)
         .expect(200, expected);
     });
-    it("PATCH /api/fandoms/:fandomId should return 400 if required data is not present", () => {
-      const testFandom = 3;
-      const updatedFandom = { wrongField: "This is not the right field!" };
+    it.only("PATCH /api/reviews/:reviewId should return 400 if required data is not present", () => {
+      const testReview = 9;
+      const updatedReview = { wrongField: "This is not the right field!" };
       return supertest(app)
-        .patch(`/api/fandoms/${testFandom}`)
+        .patch(`/api/reviews/${testReview}`)
         .set(`Authorization`, `Bearer ${authToken}`)
-        .send(updatedFandom)
+        .send(updatedReview)
         .expect(400);
     });
     it("PATCH /api/fandoms/:fandomId should return 401 if the user is not authorized", () => {
