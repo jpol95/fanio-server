@@ -43,12 +43,28 @@ describe.only("fandoms-endpoints", () => {
         .get(`/api/sections/section/parent/${testInstallmentId}`)
         .expect(200, expected)
     })
+    it("DELETE /api/sections/section/:sectionId should return 204", () => {
+        const testSectionId = 4
+        const testInstallmentId = 6
+        const expected = testHelper.sectionList.filter(
+            section => section.id !== testSectionId && section.installmentId === testInstallmentId
+        )
+        return supertest(app)
+        .delete(`/api/sections/section/${testSectionId}`)
+        .set('Authorization', `Bearer ${authToken}`)
+        .expect(204)
+        .then(() => {
+            return supertest(app)
+            .get(`/api/sections/section/parent/${testInstallmentId}`)
+            .expect(expected)
+        })
+    })
   })
 })
 
 //context data present --> 
 //get specific section 200, check
-//get all sections 200
+//get all sections 200 check
 //delete section 200, 
 //delete section should return 401 if user unauthorized
 //patch should return 200 if all required data present 
