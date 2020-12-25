@@ -79,6 +79,34 @@ describe("fandoms-endpoints", () => {
         .send(updatedReview)
         .expect(200, expected);
     });
+    const requiredFields = ["title", "content", "rating"]
+    const originalReview = {
+        id: 19,
+        title: `Supernatural season 3 Review`,
+        content: `Omg this is the worst season ever!`,
+        rating: 3,
+      }
+    for (let field of requiredFields){
+        const editedReview = {
+            title: `This is an edit`,
+            content: `This is an edit again`,
+            rating: 4,
+          }
+        delete editedReview[field]
+        it("PATCH /api/reviews/:reviewId should return 200 and updated review if at least one required field is present", () => {
+            const testReviewId = 19
+            return supertest(app)
+            .patch(`/api/reviews/${testReviewId}`)
+            .set('Authorization', `Bearer ${authToken}`)
+            .send(editedReview)
+            .expect(200)
+            .then(() => {
+                return supertest(app)
+                .get(`/api/reviews/${testReviewId}`)
+                .expect(200, {...originalReview, ...editedReview})       
+            })
+        })
+    }
     it("PATCH /api/reviews/:reviewId should return 400 if required data is not present", () => {
       const testReview = 9;
       const updatedReview = { wrongField: "This is not the right field!" };
