@@ -97,6 +97,27 @@ describe.only("fandoms-endpoints", () => {
         .send(editedInstallment)
         .expect(400)
     })
+    const requiredFields = ["title", "type"]
+    const originalInstallment = { id: 4, title: "Buffy Comic Series", type: "Comic series", fandomId: 4 }
+    //YOU ARE HERE
+    for (let field of requiredFields){
+        const editedInstallment = {title: "Buffy Comic Series Updated", type: "Movie series" }
+        delete editedInstallment[field]
+        it("PATCH /api/installments/:installmentId should return 200 and updated installment if at least one required field is present", () => {
+            const testInstallmentId = 4
+            return supertest(app)
+            .patch(`/api/installments/${testInstallmentId}`)
+            .set('Authorization', `Bearer ${authToken}`)
+            .send(editedInstallment)
+            .expect(200)
+            .then(() => {
+                return supertest(app)
+                .get(`/api/installments/${testInstallmentId}`)
+                .expect(200, {...originalInstallment, ...editedInstallment})       
+            })
+        })
+    }
+
   })
 })
 
@@ -107,7 +128,7 @@ describe.only("fandoms-endpoints", () => {
 //should return 401 if user unauthorized check
 //patch should return 200 if all required data present check
 //patch should return 400 if no required data present check
-//patch should return 400 if invalid type submitted
+//patch should return 400 if invalid type submitted check
 //patch should return 200 if some required data present
 //patch should return 401 if user is unauthorized
 
