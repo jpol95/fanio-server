@@ -7,7 +7,7 @@ const TagsService = {
         .where({id})
         .first()
         .then(tag =>{
-             return TagsService.serializeTag(tag)
+            return TagsService.serializeTag(tag)
         })
     },
     getTags : (db) => {

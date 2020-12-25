@@ -8,7 +8,7 @@ const { post } = require("../src/app");
 const authToken = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJpYXQiOjE2MDg3NjAyNjIsInN1YiI6ImtpbmdidW1paSJ9.H6qR3kpROuueininbMukdIjzA00Af5Q-PcTh_c59O1Q`;
 const wrongAuthToken = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJpYXQiOjE2MDg4NDQ4NTYsInN1YiI6ImFkbWlyYWx6aGFvbyJ9.PT5qFdrnfZItlDC9T0jyS3b40HeefCKcnM5xXXISfUA`;
 
-describe("tags-endpoints", () => {
+describe("trels-endpoints", () => {
   let db = knex({
     client: "pg",
     connection: process.env.TEST_DB_URL,
@@ -21,25 +21,27 @@ describe("tags-endpoints", () => {
     return testHelper.cleanUp(db);
   });
   after("destroy database", () => db.destroy());
-  context("tags table has data in it", () => {
+  context("trels table has data in it", () => {
       beforeEach("seed data", () => testHelper.seedDataBase(db))
-      it("GET /api/tags/ should return 200 and a list of tags", () => {
+      it("GET /api/trels/ should return 200 and a list of trels", () => {
           return supertest(app)
-          .get(`/api/tags`)
-          .expect(testHelper.tagList)
+          .get(`/api/trels`)
+          .expect(testHelper.reviewTagList)
       })
-      it("POST /api/tags/ should return 201 and created tag", () => {
-          const tag = [{
-              title: "testing", 
+      it.only("POST /api/tags/ should return 201 and created tag", () => {
+          const reviewId = 20
+          const trel = [{
+              tagId: 5, 
           }]
           return supertest(app)
-          .post(`/api/tags`)
-          .send(tag)
+          .post(`/api/trels/${reviewId}`)
+          .set('Authorization', `Bearer ${authToken}`)
+          .send(trel)
           .expect(201)
-          .then(tag => {
+          .then(trel => {
               return supertest(app)
-              .get(`/api/tags`)
-              .expect([...testHelper.tagList, ...tag.body])
+              .get(`/api/trels`)
+              .expect([...testHelper.reviewTagList, ...trel.body])
           })
       })
       it("GET /api/tags/:tagId should return 200 and the created tag", () => {
