@@ -30,26 +30,26 @@ describe("subs-endpoints", () => {
         .expect(200, expected)
 
     })
-    it.only("GET /api/sections/section/parent/:installmentId should return 200 and delete specified section", () => {
+    it("GET /api/sections/sub/parent/:sectionId should return 200 and delete specified section", () => {
         const testSectionId = 11
         const expected = testHelper.subList.filter(sub => sub.sectionId === testSectionId)
         return supertest(app)
         .get(`/api/sections/sub/parent/${testSectionId}`)
         .expect(200, expected)
     })
-    it("DELETE /api/sections/section/:sectionId should return 204 and delete section in database", () => {
-        const testSectionId = 4
-        const testInstallmentId = 6
-        const expected = testHelper.sectionList.filter(
-            section => section.id !== testSectionId && section.installmentId === testInstallmentId
+    it.only("DELETE /api/sections/sub/:subId should return 204 and delete section in database", () => {
+        const testSubId = 4
+        const testSectionId = 16
+        const expected = testHelper.subList.filter(
+            sub => sub.id !== testSubId && sub.sectionId === testSectionId
         )
         return supertest(app)
-        .delete(`/api/sections/section/${testSectionId}`)
+        .delete(`/api/sections/sub/${testSubId}`)
         .set('Authorization', `Bearer ${authToken}`)
         .expect(204)
         .then(() => {
             return supertest(app)
-            .get(`/api/sections/section/parent/${testInstallmentId}`)
+            .get(`/api/sections/sub/parent/${testSectionId}`)
             .expect(expected)
         })
     })
