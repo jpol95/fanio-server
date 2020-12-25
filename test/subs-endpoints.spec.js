@@ -155,16 +155,16 @@ context("sections table contains no data", () => {
         .get(`/api/sections/sub/${testSubId}`)
         .expect(400)
     })
-    it.only("GET /api/sections/section/parent/:installmentId should return 400 when no data is present", () => {
+    it("GET /api/sections/sub/parent/:sectionId should return 400 when no data is present", () => {
         const testSectionId = 4
         return supertest(app)
         .get(`/api/sections/sub/parent/${testSectionId}`)
         .expect(200, [])
     })
-    it("DELETE /api/sections/section/:sectionId should return 400 when no data is present", () => {
-        const testSectionId = 4
+    it.only("DELETE /api/sections/sub/:subId should return 400 when no data is present", () => {
+        const testSubId = 4
         return supertest(app)
-        .delete(`/api/sections/section/${testSectionId}`)
+        .delete(`/api/sections/sub/${testSubId}`)
         .expect(400)
     })
     it("POST /api/sections/section/:sectionId should return 200 and inserted section", () => {
