@@ -60,7 +60,7 @@ describe("subs-endpoints", () => {
         .set('Authorization', `Bearer ${wrongAuthToken}`)
         .expect(401)
     })
-    it.only("PATCH /api/sections/sub/:subId should return 200 and updated sub", () => {
+    it("PATCH /api/sections/sub/:subId should return 200 and updated sub", () => {
         const testSubId = 4
         const updatedSub = {
                 title: `This is updated`,
@@ -81,17 +81,17 @@ describe("subs-endpoints", () => {
             .expect(expected)
         })
     })
-    it("PATCH /api/sections/section/:sectionId should return 400 if no required sections are provided", () => {
-        const testSectionId = 4
-        const updatedSection = {
+    it.only("PATCH /api/sections/sub/:subId should return 400 if no required sections are provided", () => {
+        const testSubId = 4
+        const updatedSub = {
                 wrongSection1: `This is updated`,
                 wrongSection2: 10,
                 wrongSection3: 19
         }
         return supertest(app)
-        .patch(`/api/sections/section/${testSectionId}`)
+        .patch(`/api/sections/sub/${testSubId}`)
         .set('Authorization', `Bearer ${authToken}`)
-        .send(updatedSection)
+        .send(updatedSub)
         .expect(400)
   })
   it("PATCH /api/sections/section/:sectionId should return 400 if order is not valid", () => {
