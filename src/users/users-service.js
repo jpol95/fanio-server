@@ -26,6 +26,7 @@ const UsersService = {
     .select("*")
     .where({id})
     .first()
+   console.log(sub)
     const user = await UsersService.getUserBySectionId(db, sub.sectionId)
     return user
   },
@@ -34,6 +35,7 @@ const UsersService = {
       .select("*")
       .where({id})
       .first()
+      console.log(section)
       const user = await UsersService.getUserByInstallmentId(db, section.installmentId)
       return user
     },

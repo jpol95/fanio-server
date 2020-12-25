@@ -161,27 +161,28 @@ context("sections table contains no data", () => {
         .get(`/api/sections/sub/parent/${testSectionId}`)
         .expect(200, [])
     })
-    it.only("DELETE /api/sections/sub/:subId should return 400 when no data is present", () => {
+    it("DELETE /api/sections/sub/:subId should return 400 when no data is present", () => {
         const testSubId = 4
         return supertest(app)
         .delete(`/api/sections/sub/${testSubId}`)
+        .set('Authorization', `Bearer ${authToken}`)
         .expect(400)
     })
-    it("POST /api/sections/section/:sectionId should return 200 and inserted section", () => {
-        const testInstallmentId = 4
-        const sectionToInsert = [{
+    it.only("POST /api/sections/sub/:subId should return 200 and inserted sub", () => {
+        const testSectionId = 6
+        const subToInsert = [{
                 title: `This is updated`,
                 order: 10
         }]
-        const expected = {...sectionToInsert[0], id: 1, installmentId: 4, reviewId: null}
+        const expected = {...subToInsert[0], id: 1, sectionId: 6, reviewId: null}
         return supertest(app)
-        .post(`/api/sections/section/parent/${testInstallmentId}`)
+        .post(`/api/sections/sub/parent/${testSectionId}`)
         .set('Authorization', `Bearer ${authToken}`)
-        .send(sectionToInsert)
+        .send(subToInsert)
         .expect(201)
         .then(() => {
             return supertest(app)
-            .get(`/api/sections/section/1`)
+            .get(`/api/sections/sub/1`)
             .expect(expected)
         })
     })

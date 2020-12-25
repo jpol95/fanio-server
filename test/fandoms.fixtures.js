@@ -421,7 +421,7 @@ const userList = [
 
   const seedInstallments = async (db) => {
     await seedFandoms(db)
-    db.transaction(async trx => {
+    return db.transaction(async trx => {
     await trx("installments").insert(installmentList)
     await trx.raw("select setval('installments_id_seq', ?);", installmentList[installmentList.length - 1].id)
     })
@@ -429,12 +429,19 @@ const userList = [
 
   const seedSections = async (db) => {
     await seedInstallments(db)
-    db.transaction(async trx => {
+    await seedReviews(db)
+    return db.transaction(async trx => {
     await trx("sections").insert(sectionList)
     await trx.raw("select setval('sections_id_seq', ?);", sectionList[sectionList.length - 1].id)
     })
   }
   
+  const seedReviews = async (db) => {
+    return db.transaction(async trx => {
+      await trx("reviews").insert(reviewList)
+      await trx.raw("select setval('reviews_id_seq', ?);", reviewList[reviewList.length - 1].id)
+    })
+  }
   
   
   const seedDataBase = async (db) => {
