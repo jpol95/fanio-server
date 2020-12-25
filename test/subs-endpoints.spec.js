@@ -168,7 +168,7 @@ context("sections table contains no data", () => {
         .set('Authorization', `Bearer ${authToken}`)
         .expect(400)
     })
-    it.only("POST /api/sections/sub/:subId should return 200 and inserted sub", () => {
+    it("POST /api/sections/sub/:subId should return 200 and inserted sub", () => {
         const testSectionId = 6
         const subToInsert = [{
                 title: `This is updated`,
@@ -188,31 +188,30 @@ context("sections table contains no data", () => {
     })
 const requiredFields = ["title", "order"]
 for (let field of requiredFields){
-    const testInstallmentId = 4
-    const sectionToInsert = [{
+    const subToInsert = [{
         title: `This is updated`,
         order: 10
     }]
-    delete sectionToInsert[0][field]
-    it("POST /api/sections/:sectionId should return 400 when a required field is missing", () => {
-        const testSectionId = 4
+    delete subToInsert[0][field]
+    it("POST /api/sections/sub/:subId should return 400 when a required field is missing", () => {
+        const testSectionId = 6
         return supertest(app)
-        .post(`/api/sections/section/parent/${testInstallmentId}`)
+        .post(`/api/sections/sub/parent/${testSectionId}`)
         .set('Authorization', `Bearer ${authToken}`)
-        .send(sectionToInsert)
+        .send(subToInsert)
         .expect(400)
     })
 }
-it("POST /api/sections/section/:sectionId should return 200 and inserted section", () => {
-    const testInstallmentId = 4
-    const sectionToInsert = [{
+it.only("POST /api/sections/sub/:subId should return 200 and inserted sub", () => {
+    const testSectionId = 6
+    const subToInsert = [{
             title: `This is updated`,
             order: -5
     }]
     return supertest(app)
-    .post(`/api/sections/section/parent/${testInstallmentId}`)
+    .post(`/api/sections/section/parent/${testSectionId}`)
     .set('Authorization', `Bearer ${authToken}`)
-    .send(sectionToInsert)
+    .send(subToInsert)
     .expect(400)
 })
 it("POST /api/sections/section/:sectionId should return 200 and inserted section", () => {
