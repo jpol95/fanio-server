@@ -186,6 +186,15 @@ for (let field of requiredFields){
         .expect(400)
     })
 }
+it("POST /api/installments/parent/:fandomId should return 401 if user is unauthorized", () => {
+    const testFandomId = 4
+    const installmentToInsert = [{ title: "This is a new installment", type: "Show", fandomId: 4 }]
+    return supertest(app)
+    .post(`/api/installments/parent/${testFandomId}`)
+    .set('Authorization', `Bearer ${wrongAuthToken}`)
+    .send(installmentToInsert)
+    .expect(401)
+})
 })
 })
 
@@ -206,7 +215,7 @@ for (let field of requiredFields){
 //delete should return 400 if installment not found check 
 //post should return 200 if required fields present check
 //post should return 400 if installment type is invalid check
-//post should return 400 if required field missing, 
+//post should return 400 if required field missing check
 //post should return 401 if user is unauthorized
 //get empty array if no data present,
 //get, delete, and patch should return 400
