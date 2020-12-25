@@ -129,7 +129,8 @@ describe.only("fandoms-endpoints", () => {
 
   })
 
-  context("no data is present", () => {
+  context("no installments is present", () => {
+    beforeEach("seeding fandoms", () => testHelper.seedFandoms(db))
   it("GET /api/installments/:installmentId should return 400 if no data is present", () => {
         const testInstallmentId = 4
         return supertest(app)
@@ -137,7 +138,7 @@ describe.only("fandoms-endpoints", () => {
         .expect(400)
   })
   it("GET /api/installments/parent/:fandom should return 400 if parent fandom does not exist", () => {
-      const testFandomId = 4
+      const testFandomId = 10
       return supertest(app)
       .get(`/api/installments/parent/${testFandomId}`)
       .expect(400)
@@ -147,6 +148,21 @@ describe.only("fandoms-endpoints", () => {
     return supertest(app)
     .delete(`/api/installments/${testInstallmentId}`)
     .expect(400)
+})
+it("POST /api/installments/parent/:fandomId should return 201 if required fields are present and user is authorized", () => {
+    const testFandomId = 4
+    const installmentToInsert = [{ title: "This is a new installment", type: "Movie series", fandomId: 4 }]
+    const expected = [{ id: 1, title: "This is a new installment", type: "Movie series", fandomId: 4 }]
+    return supertest(app)
+    .post(`/api/installments/parent/${testFandomId}`)
+    .set('Authorization', `Bearer ${authToken}`)
+    .send(installmentToInsert)
+    .expect(201)
+    .then(() => {
+        return supertest(app)
+        .get(`/api/installments/parent/${testFandomId}`)
+        .expect(expected)
+    })
 })
 })
 })
@@ -165,7 +181,7 @@ describe.only("fandoms-endpoints", () => {
 //if no data present --> 
 //get specific installment should return 400 if installment not there check
 //get all installments 400 if parent fandom does not exist check
-//delete should return 400 if installment not found, 
+//delete should return 400 if installment not found check 
 //post should return 200 if required fields present,
 //post should return 400 if installment type is invalid
 //post should return 400 if required field missing, 

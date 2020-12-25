@@ -103,7 +103,6 @@ describe("fandoms-endpoints", () => {
         .send(fandomToInsert)
         .expect(201)
         .then((fandom) => {
-          console.log(fandom.body);
           return supertest(app)
             .get(`/api/fandoms/${fandomId}`)
             .expect(200, expected);

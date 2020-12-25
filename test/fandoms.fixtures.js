@@ -410,6 +410,15 @@ const userList = [
     })
   }
   
+  const seedFandoms = async (db) => {
+    return db.transaction(async trx => {
+      await trx("users").insert(userList)
+      await trx("fandoms").insert(fandomList)
+      trx.raw("select setval('users_id_seq', ?);", userList[userList.length - 1].id)
+      trx.raw("select setval('fandoms_id_seq', ?);", fandomList[fandomList.length - 1].id)
+    })
+  }
+  
   const seedDataBase = async (db) => {
     return db.transaction(async trx =>{
     await trx("reviews").insert(reviewList)
@@ -453,6 +462,7 @@ const userList = [
     reviewTagList,
     seedDataBase, 
     seedUsers, 
+    seedFandoms,
     cleanUp
   };
   
