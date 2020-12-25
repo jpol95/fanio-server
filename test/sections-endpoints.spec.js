@@ -173,6 +173,25 @@ context("sections table contains no data", () => {
         .delete(`/api/sections/section/${testSectionId}`)
         .expect(400)
     })
+    it("POST /api/sections/section/:sectionId should return 200 and inserted section", () => {
+        const testInstallmentId = 4
+        const sectionToInsert = [{
+                title: `This is updated`,
+                order: 10
+        }]
+        const expected = {...sectionToInsert[0], id: 1, installmentId: 4, reviewId: null}
+        return supertest(app)
+        .post(`/api/sections/section/parent/${testInstallmentId}`)
+        .set('Authorization', `Bearer ${authToken}`)
+        .send(sectionToInsert)
+        .expect(201)
+        .then(() => {
+            return supertest(app)
+            .get(`/api/sections/section/1`)
+            .expect(expected)
+        })
+    })
+    
 })
 })
 
@@ -191,8 +210,8 @@ context("sections table contains no data", () => {
 //if no data present --> 
 //get specific section should return 400 if section not there check
 //get empty array if no data present check
-//delete should return 400 if section not found 
-//post should return 200 if required fields present
+//delete should return 400 if section not found check
+//post should return 200 if required fields present 
 //post should return 400 if section order is invalid
 //post should return 400 if required field missing 
 //post should return 401 if user is unauthorized 
