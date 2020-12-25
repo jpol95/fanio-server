@@ -22,7 +22,7 @@ describe.only("fandoms-endpoints", () => {
   after("destroy database", () => db.destroy());
   context("sections table has data in it", () => {
     beforeEach("insert installments into db", () => testHelper.seedDataBase(db));
-    it("GET /api/sections/section/:sectionId should return 200", () => {
+    it("GET /api/sections/section/:sectionId should return 200 and specific section", () => {
         const testSectionId = 4
         const expected =  {
             id: 4,
@@ -36,14 +36,14 @@ describe.only("fandoms-endpoints", () => {
         .expect(200, expected)
 
     })
-    it("GET /api/sections/section/parent/:installmentId should return 200", () => {
+    it("GET /api/sections/section/parent/:installmentId should return 200 and delete specified section", () => {
         const testInstallmentId = 4
         const expected = testHelper.sectionList.filter(section => section.installmentId === testInstallmentId)
         return supertest(app)
         .get(`/api/sections/section/parent/${testInstallmentId}`)
         .expect(200, expected)
     })
-    it("DELETE /api/sections/section/:sectionId should return 204", () => {
+    it("DELETE /api/sections/section/:sectionId should return 204 and delete section in database", () => {
         const testSectionId = 4
         const testInstallmentId = 6
         const expected = testHelper.sectionList.filter(
@@ -66,7 +66,7 @@ describe.only("fandoms-endpoints", () => {
         .set('Authorization', `Bearer ${wrongAuthToken}`)
         .expect(401)
     })
-    it("PATCH /api/sections/section/:sectionId should return 200", () => {
+    it("PATCH /api/sections/section/:sectionId should return 200 and updated section", () => {
         const testSectionId = 4
         const updatedSection = {
                 title: `This is updated`,
@@ -153,6 +153,14 @@ it("PATCH /api/sections/section/:sectionId should return 401 if user is not auth
     .expect(401)
 })
 })
+context("sections table contains no data", () => {
+    it("GET /api/sections/section/:sectionId should return 400 when no data is present", () => {
+        const testSectionId = 4
+        return supertest(app)
+        .get(`/api/sections/section/${testSectionId}`)
+        .expect(400)
+    })
+})
 })
 
 //context data present --> 
@@ -164,10 +172,10 @@ it("PATCH /api/sections/section/:sectionId should return 401 if user is not auth
 //patch should return 400 if no required data present check
 //patch should return 400 if invalid order submitted  check
 //patch should return 200 if some required data present check
-//patch should return 401 if user is unauthorized 
+//patch should return 401 if user is unauthorized check
 
 //if no data present --> 
-//get specific section should return 400 if section not ther
+//get specific section should return 400 if section not there
 //get all sections 400 if parent installment does not exist
 //delete should return 400 if section not found 
 //post should return 200 if required fields present
