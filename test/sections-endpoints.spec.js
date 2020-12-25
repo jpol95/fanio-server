@@ -220,6 +220,18 @@ it("POST /api/sections/section/:sectionId should return 200 and inserted section
     .send(sectionToInsert)
     .expect(400)
 })
+it("POST /api/sections/section/:sectionId should return 200 and inserted section", () => {
+    const testInstallmentId = 4
+    const sectionToInsert = [{
+            title: `This is updated`,
+            order: 10
+    }]
+    return supertest(app)
+    .post(`/api/sections/section/parent/${testInstallmentId}`)
+    .set('Authorization', `Bearer ${wrongAuthToken}`)
+    .send(sectionToInsert)
+    .expect(401)
+})
 })
 })
 
@@ -242,6 +254,6 @@ it("POST /api/sections/section/:sectionId should return 200 and inserted section
 //post should return 200 if required fields present check
 //post should return 400 if section order is invalid check
 //post should return 400 if required field missing check
-//post should return 401 if user is unauthorized 
+//post should return 401 if user is unauthorized <--YOU ARE HERE!!!!!!
 //get, delete, and patch should return 400 
 //test for xss
