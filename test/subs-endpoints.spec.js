@@ -156,7 +156,7 @@ context("sections table contains no data", () => {
         .expect(400)
     })
     it("GET /api/sections/sub/parent/:sectionId should return 400 when no data is present", () => {
-        const testSectionId = 4
+        const testSectionId = 6
         return supertest(app)
         .get(`/api/sections/sub/parent/${testSectionId}`)
         .expect(200, [])
@@ -202,7 +202,7 @@ for (let field of requiredFields){
         .expect(400)
     })
 }
-it("POST /api/sections/sub/:subId should return 200 and inserted sub", () => {
+it("POST /api/sections/sub/:subId should return 400 when provided with an invalid order", () => {
     const testSectionId = 6
     const subToInsert = [{
             title: `This is updated`,
@@ -214,8 +214,8 @@ it("POST /api/sections/sub/:subId should return 200 and inserted sub", () => {
     .send(subToInsert)
     .expect(400)
 })
-it("POST /api/sections/sub/:subId should return 200 and inserted sub", () => {
-    const testSectionId = 4
+it("POST /api/sections/sub/:subId should return 401 when user is unauthorized", () => {
+    const testSectionId = 6
     const subToInsert = [{
             title: `This is updated`,
             order: 10
@@ -226,8 +226,8 @@ it("POST /api/sections/sub/:subId should return 200 and inserted sub", () => {
     .send(subToInsert)
     .expect(401)
 })
-it.only("PATCH /api/sections/sub/:subId should return 400 when no data is present", () => {
-    const testSubId = 4
+it("PATCH /api/sections/sub/:subId should return 400 when no data is present", () => {
+    const testSubId = 6
     const updatedSub = {
         title: `This is updated`,
         order: 5,
@@ -239,20 +239,20 @@ it.only("PATCH /api/sections/sub/:subId should return 400 when no data is presen
     .send(updatedSub)
     .expect(400)
 })
-it("POST /sections/parent/:installmentId sanitizes inputs that contain xss", () => {
-    const testInstallmentId = 4
+it("POST /sections/sub/parent/:subId sanitizes inputs that contain xss", () => {
+    const testSectionId = 6
     const xssFandom = [{
       title: 'Naughty naughty very naughty <script>alert("xss");</script>',
       order: 10, 
     }];
     return supertest(app)
-      .post(`/api/sections/section/parent/${testInstallmentId}`)
+      .post(`/api/sections/sub/parent/${testSectionId}`)
       .set("Authorization", `Bearer ${authToken}`)
       .send(xssFandom)
       .expect(201)
       .then((_) => {
         return supertest(app)
-          .get("/api/sections/section/1")
+          .get("/api/sections/sub/1")
           .then((result) => {
             expect(result.body.title).to.eql(
               'Naughty naughty very naughty &lt;script&gt;alert("xss");&lt;/script&gt;'
