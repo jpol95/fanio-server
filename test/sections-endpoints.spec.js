@@ -114,7 +114,6 @@ describe.only("fandoms-endpoints", () => {
     .expect(400)
 })
 const requiredFields = ["title", "order", "reviewId"]
-//YOU ARE HERE
 for (let field of requiredFields){
     const editedSection = {
         title: `This is updated`,
@@ -140,7 +139,19 @@ for (let field of requiredFields){
         })
     })
 }
-
+it("PATCH /api/sections/section/:sectionId should return 401 if user is not authorized", () => {
+    const testSectionId = 4
+    const updatedSection = {
+        title: `This is updated`,
+        order: 5,
+        reviewId: 19
+    }
+    return supertest(app)
+    .patch(`/api/sections/section/${testSectionId}`)
+    .set('Authorization', `Bearer ${wrongAuthToken}`)
+    .send(updatedSection)
+    .expect(401)
+})
 })
 })
 
@@ -152,7 +163,7 @@ for (let field of requiredFields){
 //patch should return 200 if all required data present check 
 //patch should return 400 if no required data present check
 //patch should return 400 if invalid order submitted  check
-//patch should return 200 if some required data present
+//patch should return 200 if some required data present check
 //patch should return 401 if user is unauthorized 
 
 //if no data present --> 
