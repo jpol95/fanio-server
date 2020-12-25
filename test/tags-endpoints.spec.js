@@ -42,5 +42,11 @@ describe.only("auth-endpoints", () => {
               .expect([...testHelper.tagList, ...tag.body])
           })
       })
+      it("GET /api/tags/:tagId should return 200 and the created tag", () => {
+          const testTagId = 4
+        return supertest(app)
+        .get(`/api/tags/${testTagId}`)
+        .expect(testHelper.tagList[3])
+    })
   })
 })

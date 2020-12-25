@@ -38,8 +38,8 @@ tagsRouter
   .route("/:tagId")
   .get((req, res, next) => {
       const db = req.app.get("db")
-      const {tagId} = req.params.tagId
-      TagsService.getTagById(tagId)
+      const {tagId} = req.params
+      TagsService.getTagById(db, tagId)
       .then(tag => {
           if (!tag) return res.status(400).json({error: 'Tag not found'})
           return res.status(200).json(tag)

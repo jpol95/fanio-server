@@ -1,11 +1,14 @@
 const xss = require('xss')
 
 const TagsService = {
-    getTagById : (db) => {
+    getTagById : (db, id) => {
         return db("tags")
         .select('*')
+        .where({id})
         .first()
-        .then(tag => TagsService.serializeTag(tag))
+        .then(tag =>{
+             return TagsService.serializeTag(tag)
+        })
     },
     getTags : (db) => {
         return db('tags')
