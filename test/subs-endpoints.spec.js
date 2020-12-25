@@ -202,41 +202,41 @@ for (let field of requiredFields){
         .expect(400)
     })
 }
-it.only("POST /api/sections/sub/:subId should return 200 and inserted sub", () => {
+it("POST /api/sections/sub/:subId should return 200 and inserted sub", () => {
     const testSectionId = 6
     const subToInsert = [{
             title: `This is updated`,
             order: -5
     }]
     return supertest(app)
-    .post(`/api/sections/section/parent/${testSectionId}`)
+    .post(`/api/sections/sub/parent/${testSectionId}`)
     .set('Authorization', `Bearer ${authToken}`)
     .send(subToInsert)
     .expect(400)
 })
-it("POST /api/sections/section/:sectionId should return 200 and inserted section", () => {
-    const testInstallmentId = 4
-    const sectionToInsert = [{
+it("POST /api/sections/sub/:subId should return 200 and inserted sub", () => {
+    const testSectionId = 4
+    const subToInsert = [{
             title: `This is updated`,
             order: 10
     }]
     return supertest(app)
-    .post(`/api/sections/section/parent/${testInstallmentId}`)
+    .post(`/api/sections/sub/parent/${testSectionId}`)
     .set('Authorization', `Bearer ${wrongAuthToken}`)
-    .send(sectionToInsert)
+    .send(subToInsert)
     .expect(401)
 })
-it("PATCH /api/sections/section/:sectionId should return 400 when no data is present", () => {
-    const testSectionId = 4
-    const updatedSection = {
+it.only("PATCH /api/sections/sub/:subId should return 400 when no data is present", () => {
+    const testSubId = 4
+    const updatedSub = {
         title: `This is updated`,
         order: 5,
         reviewId: 19
     }
     return supertest(app)
-    .delete(`/api/sections/section/${testSectionId}`)
+    .delete(`/api/sections/sub/${testSubId}`)
     .set('Authorization', `Bearer ${authToken}`)
-    .send(updatedSection)
+    .send(updatedSub)
     .expect(400)
 })
 it("POST /sections/parent/:installmentId sanitizes inputs that contain xss", () => {
