@@ -67,7 +67,6 @@ const invalidPassword = (password) => {
        UsersService
       .getUserByUserId(db, req.params.userId)
       .then(user => {
-        console.log("is it getting here")
         if (!user) return res.status(400).json({error: 'User not found'})
         req.userUrl = user
         next()
@@ -85,6 +84,7 @@ const invalidPassword = (password) => {
           if (!requiredFields[field]) return res.status(400).json({error: `Must provide a ${field}`})
       }
       if (invalidPassword(password)) return res.status(400).json({error: invalidPassword(password)})
+      console.log(password)
       const {name, interests, city, education} = req.body
       let optionalFields = {name, interests, city, education}
       for (let field in optionalFields) if (!optionalFields[field]) delete optionalFields[field]

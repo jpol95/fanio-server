@@ -58,7 +58,7 @@ describe.only("users-endpoints", () => {
         .send(userToUpdate)
         .expect(200, expected)
     })
-    it("DELETE /api/users/user/:userId returns 204", () => {
+    it("DELETE /api/users/user/:userId returns 204 and deletes the specified user", () => {
         const testUserId = 1
         return supertest(app)
         .delete(`/api/users/user/${testUserId}`)
@@ -70,6 +70,29 @@ describe.only("users-endpoints", () => {
             .expect(400)
         })
     })
+    
+
     //YOU ARE HERE, FINISH THE DELETE AND THE REST OF THE ENDPOINTS HERE, THEN ON TO AUTH AND TAGS/TRELS
+  })
+  context("no data is present", () => {
+    it("POST /api/users returns 201 and posts a new user", () => {
+        const userToInsert = {
+            username: "user3",
+            fullname: "Jesse A Pollack",
+            password: "password4",
+            education: "Purple University",
+            interests: ["skating", "softball", "listending to show tunes", "knitting"],
+            city: "Gallifrey",
+          }
+        return supertest(app)
+        .post(`/api/users`)
+        .send(userToInsert)
+        .expect(201)
+        .then(user => {
+            return supertest(app)
+            .get(`/api/users/user/1`)
+            .expect(user.body)
+        })
+    })
   })
 })

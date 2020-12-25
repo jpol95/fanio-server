@@ -94,14 +94,15 @@ const UsersService = {
         return bcrypt.hash(password, 12)
       },
       serializeUser(user){
-        return {
+        const result = {
             ...user, 
             username: xss(user.username), 
             interests: xss(user.interests), 
             city: xss(user.city), 
             education: xss(user.education),     
         }
-
+        delete result.password
+        return result
       }
 }
 
