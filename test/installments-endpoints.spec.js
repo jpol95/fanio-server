@@ -142,6 +142,12 @@ describe.only("fandoms-endpoints", () => {
       .get(`/api/installments/parent/${testFandomId}`)
       .expect(400)
   })
+  it("DELETE /api/installments/:installmentId should return 400 if no data is present", () => {
+    const testInstallmentId = 4
+    return supertest(app)
+    .delete(`/api/installments/${testInstallmentId}`)
+    .expect(400)
+})
 })
 })
 
@@ -158,7 +164,7 @@ describe.only("fandoms-endpoints", () => {
 
 //if no data present --> 
 //get specific installment should return 400 if installment not there check
-//get all installments 400 if parent fandom does not exist 
+//get all installments 400 if parent fandom does not exist check
 //delete should return 400 if installment not found, 
 //post should return 200 if required fields present,
 //post should return 400 if installment type is invalid
