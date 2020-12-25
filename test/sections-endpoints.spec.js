@@ -245,6 +245,28 @@ it("PATCH /api/sections/section/:sectionId should return 400 when no data is pre
     .send(updatedSection)
     .expect(400)
 })
+it("POST /sections/parent/:installmentId sanitizes inputs that contain xss", () => {
+    const testInstallmentId = 4
+    const xssFandom = [{
+      title: 'Naughty naughty very naughty <script>alert("xss");</script>',
+      order: 10, 
+    }];
+    return supertest(app)
+      .post(`/api/sections/section/parent/${testInstallmentId}`)
+      .set("Authorization", `Bearer ${authToken}`)
+      .send(xssFandom)
+      .expect(201)
+      .then((_) => {
+        return supertest(app)
+          .get("/api/sections/section/1")
+          .then((result) => {
+            expect(result.body.title).to.eql(
+              'Naughty naughty very naughty &lt;script&gt;alert("xss");&lt;/script&gt;'
+            );
+          });
+      });
+  });
+
 })
 })
 

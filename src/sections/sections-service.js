@@ -8,7 +8,15 @@ const SectionsService = {
       .then((sections) => sections.map((section) => this.serializeSection(section)));
   },
   getSectionById(db, id, tableName) {
-    return db(tableName).select("*").where({ id }).first();
+    return db(tableName)
+    .select("*")
+    .where({ id })
+    .first()
+    .then((section) => {
+      if (!!section)
+      return this.serializeSection(section)
+      else return section
+    })
   },
   insertSections(db, section, tableName) {
     return db.insert(section).into(tableName).returning("*");
