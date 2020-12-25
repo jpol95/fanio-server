@@ -215,7 +215,7 @@ it("DELETE /api/installments/:installmentId should return 400 if no installments
     .set('Authorization', `Bearer ${authToken}`)
     .expect(400)
 })
-it("DELETE /api/installments/:installmentId should return 400 if no installments are present", () => {
+it("PATCH /api/installments/:installmentId should return 400 if no installments are present", () => {
     const testInstallmentId = 4
     const editedInstallment = {title: "Buffy Comic Series Updated", type: "Movie series" }   
     return supertest(app)
@@ -224,6 +224,28 @@ it("DELETE /api/installments/:installmentId should return 400 if no installments
     .send(editedInstallment)
     .expect(400)
 })
+it("POST /installments/parent/:fandomId sanitizes inputs that contain xss", () => {
+    const testFandomId = 4
+    const xssFandom = [{
+      title: 'Naughty naughty very naughty <script>alert("xss");</script>',
+      type: "Show"
+    }];
+    return supertest(app)
+      .post(`/api/installments/parent/${testFandomId}`)
+      .set("Authorization", `Bearer ${authToken}`)
+      .send(xssFandom)
+      .expect(201)
+      .then((_) => {
+        return supertest(app)
+          .get("/api/installments/1")
+          .then((result) => {
+            expect(result.body.title).to.eql(
+              'Naughty naughty very naughty &lt;script&gt;alert("xss");&lt;/script&gt;'
+            );
+          });
+      });
+  });
+
 })
 })
 
@@ -247,5 +269,5 @@ it("DELETE /api/installments/:installmentId should return 400 if no installments
 //post should return 400 if required field missing check
 //post should return 401 if user is unauthorized check
 //get empty array if no data present check
-//get, delete, and patch should return 400 
-//don't forget to test for auth too, and to test for xss
+//get, delete, and patch should return 400 check
+//test for xss

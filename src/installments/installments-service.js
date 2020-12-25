@@ -11,7 +11,15 @@ const InstallmentsService = {
       .then((installments) => installments.map((installment) => this.serializeInstallment(installment)));
   },
   getInstallmentById(db, id) {
-   return db("installments").select("*").where({ id }).first();
+   return db("installments")
+   .select("*")
+   .where({ id })
+   .first()
+   .then(installment => {
+    if (!!installment)
+    return InstallmentsService.serializeInstallment(installment)
+    else return installment
+   })
   },
   insertInstallments(db, installment) {
     return db.insert(installment).into("installments").returning("*");
