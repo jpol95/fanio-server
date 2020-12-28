@@ -47,7 +47,7 @@ reviewsRouter.route("/:reviewId")
     const db = req.app.get("db")
     const {title, content, rating} = req.body
     const newInfo = {title, content, rating}
-    if (!title && !content && !rating) return res.status(400).json({error: 'Must update either review title or content'})
+    if (!title && !content && !rating) return res.status(400).json({error: 'Must update either review, title, or content'})
     if (rating && !validRating(rating)) res.status(400).json({ error: "Rating must be an integer between 0 and 5" });
     // console.log(title, content, rating, validRating(rating))
     ReviewsService.updateReview(db, res.review.id, newInfo)

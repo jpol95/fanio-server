@@ -62,7 +62,7 @@ describe("trels-endpoints", () => {
         .get(`/api/trels/${testTagId}/${reviewId}`)
         .expect(200, testHelper.reviewTagList[3])
     })
-    it.only("DELETE /api/trels/:reviewId should return 204 and delete all trels associated with specified review", () => {
+    it("DELETE /api/trels/:reviewId should return 204 and delete all trels associated with specified review", () => {
         const reviewId = 12
         const expected = testHelper.reviewTagList.filter(trel => trel.reviewId !== reviewId)
       return supertest(app)
@@ -75,7 +75,7 @@ describe("trels-endpoints", () => {
           .expect(expected)
       })
   })
-  it.only("DELETE /api/trels/:reviewId should return 401 if user is unauthorized", () => {
+  it("DELETE /api/trels/:reviewId should return 401 if user is unauthorized", () => {
     const reviewId = 12
   return supertest(app)
   .delete(`/api/trels/${reviewId}`)
