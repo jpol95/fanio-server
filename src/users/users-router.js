@@ -87,8 +87,8 @@ const invalidPassword = (password) => {
       console.log(invalidPassword(password))
       if (invalidPassword(password)) return res.status(400).json({error: invalidPassword(password)})
       console.log(password)
-      const {name, interests, city, education} = req.body
-      let optionalFields = {name, interests, city, education}
+      const {name, interests, city, education, fullname} = req.body
+      let optionalFields = {name, interests, city, education, fullname}
       for (let field in optionalFields) if (!optionalFields[field]) delete optionalFields[field]
       const user = {...optionalFields, ...requiredFields}
       UsersService.hashPassword(password)

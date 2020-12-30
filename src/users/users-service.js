@@ -26,7 +26,7 @@ const UsersService = {
     .select("*")
     .where({id})
     .first()
-   console.log(sub)
+  //  console.log(sub)
     const user = await UsersService.getUserBySectionId(db, sub.sectionId)
     return user
   },
@@ -35,7 +35,7 @@ const UsersService = {
       .select("*")
       .where({id})
       .first()
-      console.log(section)
+      // console.log(section)
       const user = await UsersService.getUserByInstallmentId(db, section.installmentId)
       return user
     },
@@ -94,8 +94,10 @@ const UsersService = {
         return bcrypt.hash(password, 12)
       },
       serializeUser(user){
+        console.log(user)
         const result = {
             ...user, 
+            fullname: xss(user.fullname), 
             username: xss(user.username), 
             interests: xss(user.interests), 
             city: xss(user.city), 
