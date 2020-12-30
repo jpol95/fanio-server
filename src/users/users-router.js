@@ -17,7 +17,7 @@ const invalidPassword = (password) => {
    if (password.startsWith(' ')) {
      return 'Password must not start or end with empty spaces'
    }
-   if (password.match(/(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&])[\S]+/))
+   if (!password.match(/(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&])[\S]+/))
     return `Password must contain a lower case character, an upper case character, a number and a special character`
   }
 
@@ -77,12 +77,14 @@ const invalidPassword = (password) => {
   usersRouter
   .route("/")
   .post(jsonParser, (req, res, next) => {
+      console.log(req.body)
       const db = req.app.get('db')
       const {username, password} = req.body
       const requiredFields = {username, password}
       for (let field of Object.keys(requiredFields)){
           if (!requiredFields[field]) return res.status(400).json({error: `Must provide a ${field}`})
       }
+      console.log(invalidPassword(password))
       if (invalidPassword(password)) return res.status(400).json({error: invalidPassword(password)})
       console.log(password)
       const {name, interests, city, education} = req.body
