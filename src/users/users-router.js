@@ -18,7 +18,7 @@ const invalidPassword = (password) => {
      return 'Password must not start or end with empty spaces'
    }
    if (password.match(/(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&])[\S]+/))
-    return `Must provide a password with at least 8 characters`
+    return `Password must contain a lower case character, an upper case character, a number and a special character`
   }
 
   usersRouter
