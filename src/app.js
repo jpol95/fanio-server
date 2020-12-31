@@ -24,7 +24,7 @@ app.use(
     })
   );
 
-const morganSetting = process.env.NODE_ENV === 'production' ? 'tiny' : 'common'
+const morganSetting = NODE_ENV === 'production' ? 'tiny' : 'common'
 app.use(morgan(morganSetting))
 
 app.use(helmet());
