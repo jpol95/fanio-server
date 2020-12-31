@@ -40,6 +40,5 @@ const SectionsService = {
     };
   },
 };
-//i bet you could standardize this for example
 
 module.exports = SectionsService;

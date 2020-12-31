@@ -6,12 +6,11 @@ const path = require('path')
 const {checkUserExists} = require('../users/users-router')
 const {requireLoggedInUser, requireAuth} = require("../middleware/jwt-auth")
 
-//this field will disappear once you introduce login
+
 
   fandomsRouter
   .route("/users/:userId")
   .get(checkUserExists, (req, res, next) => {
-    // console.log(req.params)
     const loggedInUser = req.params.userId
     const db = req.app.get("db");
     FandomsService.getFandomsByUser(db, loggedInUser)
@@ -23,13 +22,11 @@ const {requireLoggedInUser, requireAuth} = require("../middleware/jwt-auth")
   .post(requireAuth, requireLoggedInUser, jsonParser, (req, res, next) => {
     const db = req.app.get("db");
     const { title } = req.body;
-    // console.log(req.body)
     if (!title)
       return res.status(400).json({ error: "Must provide title for fandom" });
     const fandom = { title };
     const loggedInUser = req.params.userId
     fandom.userId = loggedInUser;
-    // console.log(fandom)
     FandomsService.insertFandom(db, fandom)
       .then((fandom) => res.status(201).location(path.posix.join(req.originalUrl, `/${fandom.id}`)).json(fandom))
       .catch(next);
@@ -58,7 +55,6 @@ fandomsRouter.route("/:fandomId")
     }).catch(next)
 })
 
-//check if you should be returning the thing you're updating
 
 async function checkFandomExists(req, res, next) {
   try {

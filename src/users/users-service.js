@@ -4,7 +4,6 @@ const bcrypt = require('bcryptjs')
 const UsersService = {
   async getUserByReviewId(db, id){
     const secInfo = await UsersService.getSecByReviewId(db, id)
-    // console.log(secInfo)
     const user = await UsersService[`getUserBy${secInfo.functionName}`](db, secInfo.result.id)
     return user
   },
@@ -26,7 +25,6 @@ const UsersService = {
     .select("*")
     .where({id})
     .first()
-  //  console.log(sub)
     const user = await UsersService.getUserBySectionId(db, sub.sectionId)
     return user
   },
@@ -35,7 +33,6 @@ const UsersService = {
       .select("*")
       .where({id})
       .first()
-      // console.log(section)
       const user = await UsersService.getUserByInstallmentId(db, section.installmentId)
       return user
     },
@@ -94,7 +91,6 @@ const UsersService = {
         return bcrypt.hash(password, 12)
       },
       serializeUser(user){
-        console.log(user)
         const result = {
             ...user, 
             fullname: xss(user.fullname), 

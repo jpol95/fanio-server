@@ -5,7 +5,7 @@ const sectionsRouter = express.Router();
 const { json } = require("express");
 const { requireLoggedInUser, requireAuth } = require("../middleware/jwt-auth");
 
-const loggedInUser = 1; //this field will disappear once you introduce login
+
 
 const setType = (req, res, next) => {
   const urlArray = req.originalUrl.split("/");
@@ -46,7 +46,6 @@ sectionsRouter
   })
   .get((req, res, next) => {
     const db = req.app.get("db");
-    // console.log(`${res.parent}Id`)
     const parentId = req.params[`${res.parent}Id`];
     SectionsService.getSectionsByParent(
       db,
@@ -54,7 +53,6 @@ sectionsRouter
       res.tableName
     )
       .then((sections) => {
-        // console.log(sections)
         return res.status(200).json(sections);
       })
       .catch(next);
@@ -65,9 +63,6 @@ sectionsRouter
   .all(setType)
   .all(checkSectionExists)
   .delete(requireAuth, requireLoggedInUser, (req, res, next) => {
-    // console.log("this is me deleting")
-    // console.log(req.params)
-    // console.log(res.tableName)
     const db = req.app.get("db");
     const { id } = res.section;
     SectionsService.deleteSection(db, id, res.tableName)
@@ -95,7 +90,6 @@ sectionsRouter
     return res.status(200).json(res.section);
   });
 
-//check if you should be returning the thing you're updating
 
 async function checkSectionExists(req, res, next) {
   try {

@@ -1,13 +1,3 @@
-//context data present --> 
-//get specific installment 200, check
-//get all installments 200, check
-//delete installment 200, check
-//should return 401 if user unauthorized check
-//patch should return 200 if all required data present check 
-//patch should return 400 if no required data present check
-//patch should return 400 if invalid type submitted check
-//patch should return 200 if some required data present check
-//patch should return 401 if user is unauthorized check
 const { expect } = require("chai");
 const supertest = require("supertest");
 const app = require("../src/app");
@@ -20,7 +10,7 @@ const wrongAuthToken = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ
 describe("fandoms-endpoints", () => {
   let db = knex({
     client: "pg",
-    connection: process.env.TEST_DB_URL,
+    connection: process.env.TEST_DATABASE_URL,
   });
   app.set("db", db);
   before("delete reviews before starting", () => {
@@ -131,13 +121,12 @@ describe("fandoms-endpoints", () => {
     });
   });
   context("No data present", () => {
-    // beforeEach("insert users", () => testHelper.seedReviews(db));
     it("POST /api/reviews should return 201 if fields are provided and user is authorized", () => {
         const reviewToInsert = {
             title: `New Review`,
             content: `Omg this is the worst episode ever!`,
             rating: 2,
-          } //should adding the userId be handled in the server?
+          } 
       const expected = { ...reviewToInsert, id: 1 };
       return supertest(app)
         .post(`/api/reviews`)
@@ -216,18 +205,3 @@ describe("fandoms-endpoints", () => {
       });
   });
 });
-
-//if no data present --> 
-//get specific installment should return 400 if installment not there check
-//get all installments 400 if parent fandom does not exist check
-//delete should return 400 if installment not found check 
-//post should return 200 if required fields present check
-//post should return 400 if installment type is invalid check
-//post should return 400 if required field missing check
-//post should return 401 if user is unauthorized check
-//get empty array if no data present check
-//get, delete, and patch should return 400 check
-//test for xss
-
-
-//REMEBER TO USE LOOP FOR PATCH

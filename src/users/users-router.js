@@ -5,7 +5,6 @@ const usersRouter = express.Router();
 const path = require('path')
 const {requireAuth, requireLoggedInUser} = require("../middleware/jwt-auth")
 
-//this field will disappear once you introduce login
 
 const invalidPassword = (password) => {
     if (password.length < 8) {
@@ -40,7 +39,6 @@ const invalidPassword = (password) => {
   })
   .patch(requireAuth, requireLoggedInUser, checkUserExists, jsonParser, (req, res, next) => {
     const db = req.app.get("db")
-    console.log(req.body)
     const {fullname, interests, city, education} = req.body
     if (!fullname && !interests && !city && education) return res.status(400).json({error: { message: "Must provide data to update"}})
     const newInfo = {fullname, interests, city, education}
@@ -54,7 +52,6 @@ const invalidPassword = (password) => {
     }).catch(next)
   })
   .delete(requireAuth, requireLoggedInUser, checkUserExists, (req, res, next) => {
-    //is it not redundant to check if the user exists? Aren't the auth middlewares pretty much already doing that
     const db = req.app.get("db")
     UsersService.deleteUserById(db, req.userUrl.id)
     .then(() => {
@@ -77,16 +74,13 @@ const invalidPassword = (password) => {
   usersRouter
   .route("/")
   .post(jsonParser, (req, res, next) => {
-      console.log(req.body)
       const db = req.app.get('db')
       const {username, password} = req.body
       const requiredFields = {username, password}
       for (let field of Object.keys(requiredFields)){
           if (!requiredFields[field]) return res.status(400).json({error: `Must provide a ${field}`})
       }
-      console.log(invalidPassword(password))
       if (invalidPassword(password)) return res.status(400).json({error: invalidPassword(password)})
-      console.log(password)
       const {name, interests, city, education, fullname} = req.body
       let optionalFields = {name, interests, city, education, fullname}
       for (let field in optionalFields) if (!optionalFields[field]) delete optionalFields[field]
@@ -106,4 +100,3 @@ const invalidPassword = (password) => {
     checkUserExists
 
   }
-  //finish deleting, try to finish patch by tomorrow

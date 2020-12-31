@@ -1,8 +1,4 @@
-//create db
-//after destroy
-//before truncate db
-//aftereach truncate data
-//beforeeach insert data(in context of data present)
+
 const { expect } = require("chai");
 const supertest = require("supertest");
 const app = require("../src/app");
@@ -15,7 +11,7 @@ const wrongAuthToken = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ
 describe("fandoms-endpoints", () => {
   let db = knex({
     client: "pg",
-    connection: process.env.TEST_DB_URL,
+    connection: process.env.TEST_DATABASE_URL,
   });
   app.set("db", db);
   before("delete fandoms before starting", () => {
@@ -99,7 +95,6 @@ describe("fandoms-endpoints", () => {
     })
     const requiredFields = ["title", "type"]
     const originalInstallment = { id: 4, title: "Buffy Comic Series", type: "Comic series", fandomId: 4 }
-    //YOU ARE HERE
     for (let field of requiredFields){
         const editedInstallment = {title: "Buffy Comic Series Updated", type: "Movie series" }
         delete editedInstallment[field]
@@ -236,25 +231,4 @@ it("POST /installments/parent/:fandomId sanitizes inputs that contain xss", () =
 })
 })
 
-//context data present --> 
-//get specific installment 200, check
-//get all installments 200, check
-//delete installment 200, check
-//should return 401 if user unauthorized check
-//patch should return 200 if all required data present check 
-//patch should return 400 if no required data present check
-//patch should return 400 if invalid type submitted check
-//patch should return 200 if some required data present check
-//patch should return 401 if user is unauthorized check
 
-//if no data present --> 
-//get specific installment should return 400 if installment not there check
-//get all installments 400 if parent fandom does not exist check
-//delete should return 400 if installment not found check 
-//post should return 200 if required fields present check
-//post should return 400 if installment type is invalid check
-//post should return 400 if required field missing check
-//post should return 401 if user is unauthorized check
-//get empty array if no data present check
-//get, delete, and patch should return 400 check
-//test for xss

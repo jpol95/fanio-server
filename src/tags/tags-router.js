@@ -5,12 +5,10 @@ const tagsRouter = express.Router();
 const path = require('path')
 const {requireLoggedInUser, requireAuth} = require('../middleware/jwt-auth')
 
-//when you load the reviews you have to load the tags toooooo
 
 tagsRouter
   .route("/")
   .get((req, res, next) => {
-    // console.log("hello")
     const db = req.app.get("db");
     TagsService.getTags(db)
       .then((tags) => {
@@ -46,7 +44,6 @@ tagsRouter
       }).catch(next)
   })
 
-//check if you should be returning the thing you're updating
 
 
 module.exports = tagsRouter

@@ -27,9 +27,7 @@ const userList = [
     { id: 5, title: "Harry Potter", userId: 1 },
     { id: 6, title: "This belongs to user 2", userId: 2 },
   ];
-  //when someone wants to add a fandom, have a dropdown menu or have them create a new one
-  //join fandomList_user table
-  //you'd have a join table of users to fandoms
+
   
   const typeList = [
     {
@@ -62,28 +60,14 @@ const userList = [
     },
   ];
   
-  // installment of type show
-  // How many sections? 5
-  // How many episodes in this section?
-  
-  // book series?
-  // It'll ask how many books?
-  
-  // sectionList --> subSectionList
-  
-  //hasSubs not necessary
-  //so instead of having separate typeList table, type can be a field attached to installment table
-  
-  //later on if I want to add the option of comics not having subs
-  //then i could just have another type that's false, call one
-  //'comicHS(hasSubs)' and the other 'comicNS(noSubs)'
+
   
   const installmentList = [
     { id: 1, title: "Doctor Who TV Series", type: "Show", fandomId: 1 },
     { id: 2, title: "Parks and Rec TV Series", type: "Show", fandomId: 3 },
     { id: 3, title: "Buffy TV Series", type: "Show", fandomId: 4 },
     { id: 4, title: "Buffy Comic Series", type: "Comic series", fandomId: 4 },
-    { id: 5, title: "Supernatural TV Series", type: "Show", fandomId: 2 },  //change these to lower case!!!!!!!!!!!!
+    { id: 5, title: "Supernatural TV Series", type: "Show", fandomId: 2 }, 
     { id: 6, title: "Harry Potter Books", type: "Book series", fandomId: 5 },
   ];
   
@@ -347,12 +331,7 @@ const userList = [
     
   ];
   
-  //fakerjs creates fake data for you
-  
-  //database normalization, instead of title: section number
-  //seeding the data
-  //fandom -> section -> Episode
-  //you could combine different media types into one table
+
   
   const subList = [
     { id: 1, title: "Doctor Who s3e5", order: 5, reviewId: 1, sectionId: 7 },

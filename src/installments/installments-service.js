@@ -41,6 +41,5 @@ const InstallmentsService = {
     return { ...installment, title: xss(installment.title) };
   },
 };
-//i bet you could standardize this for example
 
 module.exports = InstallmentsService;

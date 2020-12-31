@@ -10,7 +10,7 @@ const wrongAuthToken = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ
 describe("fandoms-endpoints", () => {
   let db = knex({
     client: "pg",
-    connection: process.env.TEST_DB_URL,
+    connection: process.env.TEST_DATABASE_URL,
   });
   app.set("db", db);
   before("delete fandoms before starting", () => {
@@ -43,7 +43,6 @@ describe("fandoms-endpoints", () => {
       const testFandom = 3;
       const expected = [...testHelper.fandomList.slice(0, 5)];
       expected.splice(2, 1);
-      //YOU ARE HERE
       return supertest(app)
         .delete(`/api/fandoms/${testFandom}`)
         .set(`Authorization`, `Bearer ${authToken}`)
@@ -177,11 +176,3 @@ describe("fandoms-endpoints", () => {
   });
 });
 
-//create db
-//after destroy
-//before truncate db
-//aftereach truncate data
-//beforeeach insert data(in context of data present)
-//context data present --> get specific fandom, get all fandoms 200, should return 400 if user not there, delete fandom 200, patch should return 400 if no required data present, should return 200 if some required data present)
-//if no data present --> post should return 200 if required fields present, should return 400 if required field missing, get empty array if no data present, get, delete, and patch should return 400
-//don't forget to test for auth too, and to test for xss

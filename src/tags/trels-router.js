@@ -5,9 +5,6 @@ const trelsRouter = express.Router();
 const path = require("path");
 const { requireLoggedInUser, requireAuth } = require("../middleware/jwt-auth");
 
-const loggedInUser = 1; //this field will disappear once you introduce login
-
-//when you load the reviews you have to load the tags toooooo
 
 trelsRouter
   .route("/")
@@ -20,7 +17,6 @@ trelsRouter
       .catch(next);
   })
 
-  //should you check that the trel exists?
 trelsRouter.route("/:tagId/:reviewId")
 .get((req, res, next) => {
   const db = req.app.get("db");
@@ -42,7 +38,6 @@ trelsRouter.route("/:reviewId")
   const trels = req.body;
   const trelArr = [];
   const reviewId = req.params.reviewId
-  // console.log(trels)
   for (let trel of trels) {
     const { tagId } = trel;
     if (!tagId || !reviewId)
@@ -71,6 +66,5 @@ trelsRouter.route("/:reviewId")
   });
 });
 
-//check if you should be returning the thing you're updating
 
 module.exports = trelsRouter;

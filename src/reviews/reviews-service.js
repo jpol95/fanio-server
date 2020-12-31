@@ -35,8 +35,6 @@ const ReviewsService = {
     return { ...review, title: xss(review.title), content: xss(review.content) };
   },
 };
-//you really need to serialize
 
-//i bet you could standardize this for example
 
 module.exports = ReviewsService;

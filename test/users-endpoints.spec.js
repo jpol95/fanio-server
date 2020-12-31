@@ -10,7 +10,7 @@ const wrongAuthToken = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ
 describe("users-endpoints", () => {
   let db = knex({
     client: "pg",
-    connection: process.env.TEST_DB_URL,
+    connection: process.env.TEST_DATABASE_URL,
   });
   app.set("db", db);
   before("delete users before starting", () => {
@@ -77,7 +77,7 @@ describe("users-endpoints", () => {
         const userToInsert = {
             username: "user3",
             fullname: "Jesse A Pollack",
-            password: "password4",
+            password: "Password1@",
             education: "Purple University",
             interests: ["skating", "softball", "listending to show tunes", "knitting"],
             city: "Gallifrey",

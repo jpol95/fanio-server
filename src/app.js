@@ -24,7 +24,6 @@ app.use(helmet());
 app.use(cors());
 
 app.use(errorHandler)
-// app.use(validateBearerToken);
 
 app.use("/api/auth", authRouter)
 app.use("/api/fandoms", fandomsRouter)

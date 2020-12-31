@@ -10,7 +10,7 @@ const wrongAuthToken = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ
 describe("sections-endpoints", () => {
   let db = knex({
     client: "pg",
-    connection: process.env.TEST_DB_URL,
+    connection: process.env.TEST_DATABASE_URL,
   });
   app.set("db", db);
   before("delete fandoms before starting", () => {
@@ -269,24 +269,3 @@ it("POST /sections/parent/:installmentId sanitizes inputs that contain xss", () 
 
 })
 })
-
-//context data present --> 
-//get specific section 200, check
-//get all sections 200 check
-//delete section 200 check
-//delete section should return 401 if user unauthorized check
-//get all sections 400 if parent installment does not exist
-//patch should return 200 if all required data present check 
-//patch should return 400 if no required data present check
-//patch should return 400 if invalid order submitted  check
-//patch should return 200 if some required data present check
-//patch should return 401 if user is unauthorized check
-
-//if no data present --> 
-//post should return 200 if required fields present check
-//post should return 400 if section order is invalid check
-//post should return 400 if required field missing check
-//post should return 401 if user is unauthorized check
-//get empty array if no data present check
-//get(specific), delete, and patch should return 400 
-//test for xss

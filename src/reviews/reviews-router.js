@@ -28,7 +28,6 @@ reviewsRouter
       .catch(next);
   });
 
-  //deal with error here
 
 reviewsRouter.route("/:reviewId")
 .all(checkInstallmentExists)
@@ -38,7 +37,6 @@ reviewsRouter.route("/:reviewId")
 .delete(requireAuth, requireLoggedInUser, (req, res, next) => {
     const db = req.app.get("db")
     const {id} = res.review
-    //YOU ARE HERE
     ReviewsService.deleteReview(db, id)
     .then(() => res.status(204).end())
     .catch(next)
@@ -49,7 +47,6 @@ reviewsRouter.route("/:reviewId")
     const newInfo = {title, content, rating}
     if (!title && !content && !rating) return res.status(400).json({error: 'Must update either review, title, or content'})
     if (rating && !validRating(rating)) res.status(400).json({ error: "Rating must be an integer between 0 and 5" });
-    // console.log(title, content, rating, validRating(rating))
     ReviewsService.updateReview(db, res.review.id, newInfo)
     .then(review => {
         return res.status(200).json(review)
@@ -58,13 +55,11 @@ reviewsRouter.route("/:reviewId")
 
 
 
-//check if you should be returning the thing you're updating
 
 async function checkInstallmentExists(req, res, next) {
   try {
     const reviewId = req.params.reviewId;
     const db = req.app.get("db")
-    // console.log(reviewId)
     const review = await ReviewsService.getReviewById(db, reviewId);
     if (!review) return res.status(400).json({ error: "Installment not found" });
     res.review = review;

@@ -24,9 +24,7 @@ installmentsRouter
     installmentsList.push(installmentSingle)
     }
 
-    //debug posting sections, then on to posting reviews! think about that search functionality, if you dare, and how you plan to implement it
-  //it was ok to delete the location thing in here right? since it was a list
-    // console.log(installmentsList)
+
     InstallmentsService.insertInstallments(db, installmentsList)
       .then((installments) => res.status(201).json(installments))
       .catch(next);
@@ -65,7 +63,6 @@ installmentsRouter.route("/:installmentId")
     }).catch(next)
 })
 
-//check if you should be returning the thing you're updating
 
 async function checkInstallmentExists(req, res, next) {
   try {
