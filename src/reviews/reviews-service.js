@@ -3,14 +3,13 @@ const xss = require("xss");
 const ReviewsService = {
   getReviewById(db, id) {
     return db("reviews")
-    .select("*")
-    .where({ id })
-    .first()
-    .then(review => {
-      if (!!review)
-      return ReviewsService.serializeReview(review)
-      else return review
-    })
+      .select("*")
+      .where({ id })
+      .first()
+      .then((review) => {
+        if (!!review) return ReviewsService.serializeReview(review);
+        else return review;
+      });
   },
   insertReview(db, review) {
     return db
@@ -18,7 +17,7 @@ const ReviewsService = {
       .into("reviews")
       .returning("*")
       .then((rows) => rows[0])
-      .then((review) => ReviewsService.getReviewById(db, review.id))
+      .then((review) => ReviewsService.getReviewById(db, review.id));
   },
   deleteReview(db, id) {
     return db("reviews").where({ id }).delete();
@@ -32,9 +31,12 @@ const ReviewsService = {
       .then((review) => ReviewsService.getReviewById(db, review.id));
   },
   serializeReview(review) {
-    return { ...review, title: xss(review.title), content: xss(review.content) };
+    return {
+      ...review,
+      title: xss(review.title),
+      content: xss(review.content),
+    };
   },
 };
-
 
 module.exports = ReviewsService;

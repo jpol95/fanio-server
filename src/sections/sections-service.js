@@ -5,18 +5,19 @@ const SectionsService = {
     return db(tableName)
       .select("*")
       .where({ [`${parentInfo[0]}Id`]: parentInfo[1] })
-      .then((sections) => sections.map((section) => this.serializeSection(section)));
+      .then((sections) =>
+        sections.map((section) => this.serializeSection(section))
+      );
   },
   getSectionById(db, id, tableName) {
     return db(tableName)
-    .select("*")
-    .where({ id })
-    .first()
-    .then((section) => {
-      if (!!section)
-      return this.serializeSection(section)
-      else return section
-    })
+      .select("*")
+      .where({ id })
+      .first()
+      .then((section) => {
+        if (!!section) return this.serializeSection(section);
+        else return section;
+      });
   },
   insertSections(db, section, tableName) {
     return db.insert(section).into(tableName).returning("*");
@@ -29,13 +30,14 @@ const SectionsService = {
       .where({ id })
       .update({ ...newInfo })
       .returning("*")
-      .then(rows => rows[0])
+      .then((rows) => rows[0])
       .then((section) => {
-          return SectionsService.getSectionById(db, section.id, tableName)});
+        return SectionsService.getSectionById(db, section.id, tableName);
+      });
   },
   serializeSection(section) {
     return {
-      ...section, 
+      ...section,
       title: xss(section.title),
     };
   },

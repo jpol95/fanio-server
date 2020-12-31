@@ -5,8 +5,6 @@ const sectionsRouter = express.Router();
 const { json } = require("express");
 const { requireLoggedInUser, requireAuth } = require("../middleware/jwt-auth");
 
-
-
 const setType = (req, res, next) => {
   const urlArray = req.originalUrl.split("/");
   const db = req.app.get("db");
@@ -89,7 +87,6 @@ sectionsRouter
   .get((req, res, next) => {
     return res.status(200).json(res.section);
   });
-
 
 async function checkSectionExists(req, res, next) {
   try {

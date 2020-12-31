@@ -9,14 +9,13 @@ const FandomsService = {
   },
   getFandomById(db, id) {
     return db("fandoms")
-    .select("*")
-    .where({ id })
-    .first()
-    .then(fandom => {
-      if (!!fandom)
-      return FandomsService.serializeFandom(fandom)
-      else return fandom
-    })
+      .select("*")
+      .where({ id })
+      .first()
+      .then((fandom) => {
+        if (!!fandom) return FandomsService.serializeFandom(fandom);
+        else return fandom;
+      });
   },
   insertFandom(db, fandom) {
     return db

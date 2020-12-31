@@ -2,24 +2,32 @@ const xss = require("xss");
 
 const InstallmentsService = {
   getInstallmentType(db, id) {
-    return db("installments").select("type").where({ id }).first().then(type => type.type)
+    return db("installments")
+      .select("type")
+      .where({ id })
+      .first()
+      .then((type) => type.type);
   },
   getInstallmentsByFandom(db, fandomId) {
     return db("installments")
       .select("*")
       .where({ fandomId })
-      .then((installments) => installments.map((installment) => this.serializeInstallment(installment)));
+      .then((installments) =>
+        installments.map((installment) =>
+          this.serializeInstallment(installment)
+        )
+      );
   },
   getInstallmentById(db, id) {
-   return db("installments")
-   .select("*")
-   .where({ id })
-   .first()
-   .then(installment => {
-    if (!!installment)
-    return InstallmentsService.serializeInstallment(installment)
-    else return installment
-   })
+    return db("installments")
+      .select("*")
+      .where({ id })
+      .first()
+      .then((installment) => {
+        if (!!installment)
+          return InstallmentsService.serializeInstallment(installment);
+        else return installment;
+      });
   },
   insertInstallments(db, installment) {
     return db.insert(installment).into("installments").returning("*");
