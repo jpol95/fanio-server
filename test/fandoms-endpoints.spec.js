@@ -134,45 +134,42 @@ describe("fandoms-endpoints", () => {
       }),
       it("GET /api/fandoms/:fandomId should return 400 when no data present", () => {
         const fandomId = 1;
-        return supertest(app)
-        .get(`/api/fandoms/${fandomId}`)
-        .expect(400);
+        return supertest(app).get(`/api/fandoms/${fandomId}`).expect(400);
       }),
       it("DELETE /api/fandoms/:fandomId should return 400 when no data present", () => {
         const fandomId = 1;
         return supertest(app)
-        .delete(`/api/fandoms/${fandomId}`)
-        .set(`Authorization`, `Bearer ${authToken}`)
-        .expect(400);
+          .delete(`/api/fandoms/${fandomId}`)
+          .set(`Authorization`, `Bearer ${authToken}`)
+          .expect(400);
       }),
       it("PATCH /api/fandoms/:fandomId should return 400 when no data present", () => {
         const fandomId = 1;
         const updatedFandom = { title: "This is an updated fandom" };
         return supertest(app)
-        .patch(`/api/fandoms/${fandomId}`)
-        .set(`Authorization`, `Bearer ${authToken}`)
-        .send(updatedFandom)
-        .expect(400);
+          .patch(`/api/fandoms/${fandomId}`)
+          .set(`Authorization`, `Bearer ${authToken}`)
+          .send(updatedFandom)
+          .expect(400);
       });
-      it("POST /fandoms sanitizes inputs that contain xss", () => {
-        const testUserId = 1
-        const xssFandom = {
-          title: 'Naughty naughty very naughty <script>alert("xss");</script>',
-        };
-        return supertest(app)
-          .post(`/api/fandoms/users/${testUserId}`)
-          .set("Authorization", `Bearer ${authToken}`)
-          .send(xssFandom)
-          .then((_) => {
-            return supertest(app)
-              .get("/api/fandoms/1")
-              .then((result) => {
-                expect(result.body.title).to.eql(
-                  'Naughty naughty very naughty &lt;script&gt;alert("xss");&lt;/script&gt;'
-                );
-              });
-          });
-      });
+    it("POST /fandoms sanitizes inputs that contain xss", () => {
+      const testUserId = 1;
+      const xssFandom = {
+        title: 'Naughty naughty very naughty <script>alert("xss");</script>',
+      };
+      return supertest(app)
+        .post(`/api/fandoms/users/${testUserId}`)
+        .set("Authorization", `Bearer ${authToken}`)
+        .send(xssFandom)
+        .then((_) => {
+          return supertest(app)
+            .get("/api/fandoms/1")
+            .then((result) => {
+              expect(result.body.title).to.eql(
+                'Naughty naughty very naughty &lt;script&gt;alert("xss");&lt;/script&gt;'
+              );
+            });
+        });
+    });
   });
 });
-

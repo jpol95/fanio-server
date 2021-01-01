@@ -22,31 +22,31 @@ describe("tags-endpoints", () => {
   });
   after("destroy database", () => db.destroy());
   context("tags table has data in it", () => {
-      beforeEach("seed data", () => testHelper.seedDataBase(db))
-      it("GET /api/tags/ should return 200 and a list of tags", () => {
+    beforeEach("seed data", () => testHelper.seedDataBase(db));
+    it("GET /api/tags/ should return 200 and a list of tags", () => {
+      return supertest(app).get(`/api/tags`).expect(testHelper.tagList);
+    });
+    it("POST /api/tags/ should return 201 and created tag", () => {
+      const tag = [
+        {
+          title: "testing",
+        },
+      ];
+      return supertest(app)
+        .post(`/api/tags`)
+        .send(tag)
+        .expect(201)
+        .then((tag) => {
           return supertest(app)
-          .get(`/api/tags`)
-          .expect(testHelper.tagList)
-      })
-      it("POST /api/tags/ should return 201 and created tag", () => {
-          const tag = [{
-              title: "testing", 
-          }]
-          return supertest(app)
-          .post(`/api/tags`)
-          .send(tag)
-          .expect(201)
-          .then(tag => {
-              return supertest(app)
-              .get(`/api/tags`)
-              .expect([...testHelper.tagList, ...tag.body])
-          })
-      })
-      it("GET /api/tags/:tagId should return 200 and the created tag", () => {
-          const testTagId = 4
-        return supertest(app)
+            .get(`/api/tags`)
+            .expect([...testHelper.tagList, ...tag.body]);
+        });
+    });
+    it("GET /api/tags/:tagId should return 200 and the created tag", () => {
+      const testTagId = 4;
+      return supertest(app)
         .get(`/api/tags/${testTagId}`)
-        .expect(testHelper.tagList[3])
-    })
-  })
-})
+        .expect(testHelper.tagList[3]);
+    });
+  });
+});

@@ -22,28 +22,25 @@ describe("auth-endpoints", () => {
   });
   after("destroy database", () => db.destroy());
   context("auth table has data in it", () => {
-      beforeEach("seed data", () => testHelper.seedDataBase(db))
-      it("POST /login should return jwt token", () => {
-          const login = {
-              username: 'kingbumii', 
-              password: 'password'
-          }
-          return supertest(app)
-          .post(`/api/auth/login`)
-          .send(login)
-          .then(response => {
-              expect(response.body.authToken).to.be.a('string')
-          })
-      })
-      it("POST /login should return 400 if password incorrect", () => {
-        const login = {
-            username: 'kingbumii', 
-            password: 'wrongpassword'
-        }
-        return supertest(app)
+    beforeEach("seed data", () => testHelper.seedDataBase(db));
+    it("POST /login should return jwt token", () => {
+      const login = {
+        username: "kingbumii",
+        password: "password",
+      };
+      return supertest(app)
         .post(`/api/auth/login`)
         .send(login)
-        .expect(400)
-    })
-    })
-})
+        .then((response) => {
+          expect(response.body.authToken).to.be.a("string");
+        });
+    });
+    it("POST /login should return 400 if password incorrect", () => {
+      const login = {
+        username: "kingbumii",
+        password: "wrongpassword",
+      };
+      return supertest(app).post(`/api/auth/login`).send(login).expect(400);
+    });
+  });
+});

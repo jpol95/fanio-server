@@ -22,7 +22,6 @@ app.use(
     origin: CLIENT_ORIGIN,
   })
 );
-
 const morganSetting = NODE_ENV === "production" ? "tiny" : "common";
 app.use(morgan(morganSetting));
 
