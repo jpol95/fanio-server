@@ -81,3 +81,5 @@ api/users/user/:userId DELETE: deletes user with specified id. Happy path return
 api/users/ POST: posts new user. Happy path returns 201 and created user minus the hashed password
 
 Screenshots: ![alt text](ss1.PNG)
+![alt text](ss2.PNG)
+![alt text](ss3.PNG)
